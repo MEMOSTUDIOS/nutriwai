@@ -1,0 +1,11 @@
+name = "my-cloudflare-worker"
+main = "src/index.js"
+compatibility_date = "2025-05-09"
+
+[vars]
+MY_VARIABLE = "production_value"
+
+# Optionally add environment-specific configurations
+[env.staging]
+name = "my-cloudflare-worker-staging"
+vars = { MY_VARIABLE = "staging_value" }

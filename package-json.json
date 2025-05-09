@@ -1,0 +1,20 @@
+{
+  "name": "my-cloudflare-worker",
+  "version": "1.0.0",
+  "description": "A simple Cloudflare Worker",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^4.14.4"
+  }
+}
