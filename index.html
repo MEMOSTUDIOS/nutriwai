@@ -185,9 +185,8 @@
         }
 
         .progress-bar {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
+            position: relative;
+            top: -5rem;
             background-color: rgba(255, 255, 255, 0.3);
             border-radius: 20px;
             width: 150px;
@@ -220,7 +219,7 @@
         /* Level badge */
         .level-badge {
             position: absolute;
-            top: 4rem;
+            top: 2rem;
             right: 1rem;
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 12px;
@@ -235,7 +234,7 @@
         /* Streak effect */
         .streak-effect {
             position: absolute;
-            top: 10px;
+            top: 100px;
             left: 0;
             width: 100%;
             text-align: center;
@@ -244,7 +243,7 @@
             color: gold;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
             opacity: 0;
-            transform: translateY(-20px);
+            transform: translateY(-50px);
             pointer-events: none;
             z-index: 10;
         }
@@ -862,7 +861,7 @@
                 <div class="feature-card" onclick="addPoint(this, 0)">
                     <div class="points-popup">+1</div>
                     <div class="icon">🧠</div>
-                    <div class="text">AI-Powered Recommendations</div>
+                    <div class="text">AI-Powered Suggestions</div>
                 </div>
                 <div class="feature-card" onclick="addPoint(this, 1)">
                     <div class="points-popup">+1</div>
@@ -886,14 +885,14 @@
             <form class="form-container">
                 <div class="input-row">
                     <div class="input-group">
-                        <input type="text" placeholder="Your Name" required>
+                        <input type="text" placeholder="Your name" required>
                     </div>
                     <div class="input-group">
-                        <input type="email" placeholder="Email Address" required>
+                        <input type="email" placeholder="Email address" required>
                     </div>
                 </div>
                 <div class="input-group" style="margin-bottom: 1rem;">
-                    <textarea placeholder="What's your biggest nutrition challenge?" rows="3"></textarea>
+                    <textarea placeholder="What is your biggest nutrition challenge?" rows="3"></textarea>
                 </div>
                 <button type="submit" class="submit-button">Get Early Access</button>
             </form>
@@ -901,7 +900,7 @@
             <div class="contact-info">
                 <div class="contact-item">
                     <strong>Email</strong>
-                    contact@nutriwai.com
+                    <a href="mailto:contact@nutriwai.com" >contact@nutriwai.com</a>
                 </div>
                 <div class="contact-item">
                     <strong>Location</strong>
