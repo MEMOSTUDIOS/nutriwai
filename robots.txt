@@ -1,0 +1,60 @@
+# robots.txt for https://nutriwai.com/
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /login/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /my-account/
+Disallow: /thank-you/
+Disallow: /private/
+Disallow: /api/
+Disallow: /*?query=
+Disallow: /*&query=
+
+# Prevent indexing of duplicate content
+Disallow: /index.php/
+Disallow: /*?orderby=
+Disallow: /*&orderby=
+Disallow: /*?filter=
+Disallow: /*&filter=
+
+# Block specific file types
+Disallow: /*.pdf$
+Disallow: /*.doc$
+Disallow: /*.docx$
+Disallow: /*.xls$
+Disallow: /*.xlsx$
+
+# Allow product images to be crawled
+Allow: /wp-content/uploads/product-images/
+
+# Sitemap location
+Sitemap: https://nutriwai.com/sitemap.xml
+
+# Specific instructions for major bots
+User-agent: Googlebot
+Crawl-delay: 1
+
+User-agent: Bingbot
+Crawl-delay: 2
+
+User-agent: Yandex
+Disallow: /
+
+# Block AI scrapers
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
