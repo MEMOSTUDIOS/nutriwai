@@ -1,0 +1,74 @@
+/* FeedbackButtons.css */
+.feedback-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  max-width: 300px;
+}
+
+.feedback-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+  text-align: center;
+}
+
+.feedback-buttons {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.feedback-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 9999px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.feedback-button:hover {
+  background-color: #e9e9e9;
+}
+
+.feedback-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 4px;
+  color: #666;
+}
+
+.feedback-liked {
+  background-color: rgba(52, 211, 153, 0.1);
+}
+
+.feedback-liked .feedback-icon {
+  color: #00c853;
+}
+
+.feedback-disliked {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.feedback-disliked .feedback-icon {
+  color: #ef4444;
+}
+
+.feedback-count {
+  font-weight: 500;
+  color: #555;
+}
+
+.feedback-thanks {
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: 0.5rem;
+  text-align: center;
+}

@@ -9,6 +9,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="stylesheet" href="FeedbackButtons.css">
     <link rel="manifest" href="/site.webmanifest">
     <title>Nutriwai - Eat Smarter with AI</title>
     <meta description="Your personal nutrition coach powered by artificial intelligence. Simple. Smart. Effective.">
@@ -888,8 +889,6 @@ position: absolute;
         <div class="content-column">
             <h1 class="headline">Eat Smarter with AI</h1>
             <p class="tagline">Your personal nutrition coach powered by artificial intelligence. Simple. Smart. Effective.</p>
-            
-
             <form class="form-container">
                 <div class="input-row">
                     <div class="input-group">
@@ -904,15 +903,17 @@ position: absolute;
                 </div>
                 <button type="submit" class="submit-button">Subscribe now</button>
             </form>
-            <div style="margin-bottom:20px;"><figure>
-  <figcaption>Listen to our podcast<br/></br></figcaption>
+
+            <div style="margin-bottom:20px; padding-top: 25px; border-top: 1px solid #eee;"><figure>
+  <figcaption class="tagline" style="margin-bottom: 0px;">Listen to our podcast<br/></br></figcaption>
   <audio controls src="audio/podcast01.wav"></audio>
   </figure>
             </div>
+		<div data-feedback-container data-feedback-id="unique-section-id"></div>
             <div class="contact-info">
                 <div class="contact-item">
                     <strong>Email</strong>
-                    <a href="mailto:contact@nutriwai.com" >contact@nutriwai.com</a>
+                    <a href="mailto:contact@nutriwai.com">contact@nutriwai.com</a>
                 </div>
                 <div class="contact-item">
                     <strong>Location</strong>
@@ -925,5 +926,7 @@ position: absolute;
             </footer>
         </div>
     </div>
+<!-- Include the JS file at the end of your HTML -->
+    <script src="feedback.js"></script>
 </body>
 </html>
