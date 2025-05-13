@@ -1,11 +1,12 @@
 /* FeedbackButtons.css */
 .feedback-container {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
   background-color: #ffffff;
   border-radius: 0.5rem;
   max-width: 300px;
+margin-top: 10px;
+margin-left: 10px;
 }
 
 .feedback-title {
@@ -19,7 +20,6 @@
 .feedback-buttons {
   display: flex;
   gap: 2rem;
-  margin-bottom: 1rem;
 }
 
 .feedback-button {
