@@ -1,0 +1,24 @@
+name = "food-recognition-ai"
+compatibility_date = "2023-12-01"
+
+# Routes
+[routes]
+  # Serve static files from the root directory
+  pattern = "/"
+  directory = "/"
+
+# Environment variables
+[env]
+  # Add your environment variables here
+  # API_KEY = "your_api_key"
+
+# When using with Workers (optional)
+[workers_dev]
+  enabled = true
+
+# CORS headers
+[headers]
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"

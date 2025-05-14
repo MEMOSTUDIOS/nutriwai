@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Recognition AI</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Food Recognition AI</h1>
+        <p>Take a photo of food or upload an image to identify it</p>
+        
+        <div id="videoContainer">
+            <video id="videoElement" autoplay></video>
+        </div>
+        
+        <div id="imagePreview" style="display: none;">
+            <img id="previewImage">
+        </div>
+        
+        <div class="button-group">
+            <button id="captureBtn">Capture Food Image</button>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            <button id="uploadBtn">Upload Image</button>
+            <button id="resetBtn" style="display: none;">Take New Photo</button>
+        </div>
+        
+        <div id="resultContainer" style="display: none;">
+            <h3>AI Prediction:</h3>
+            <p id="prediction">Not yet analyzed</p>
+            <p id="confidence"></p>
+            
+            <div class="feedback-buttons">
+                <button id="correctBtn">Correct! ✓</button>
+                <button id="wrongBtn">Wrong! ✗</button>
+            </div>
+            
+            <div id="correctLabel">
+                <label for="foodNameInput">What food is this?</label>
+                <input type="text" id="foodNameInput" placeholder="Enter food name">
+                <button id="submitCorrectLabel">Submit</button>
+            </div>
+        </div>
+        
+        <div id="history">
+            <h2>Learning History</h2>
+            <table id="historyTable">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Prediction</th>
+                        <th>Actual</th>
+                        <th>Confidence</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                    <!-- History entries will be added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
