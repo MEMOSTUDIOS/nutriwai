@@ -265,3 +265,54 @@ async function saveFeedback(request, corsHeaders) {
     })
   }
 }
+
+// Update Cloudflare Worker to handle points
+async function saveFeedback(request, corsHeaders) {
+  try {
+    const feedback = await request.json();
+    const now = new Date();
+    
+    // Get or create user data
+    let userData = await MODEL_KV.get(`user:${feedback.userId}`);
+    userData = userData ? JSON.parse(userData) : {
+      totalPoints: 0,
+      dailySubmissions: 0,
+      lastSubmissionDate: ''
+    };
+
+    // Reset daily count if new day
+    const currentDate = now.toISOString().split('T')[0];
+    if (userData.lastSubmissionDate !== currentDate) {
+      userData.dailySubmissions = 0;
+      userData.lastSubmissionDate = currentDate;
+    }
+
+    // Calculate points
+    let points = 5;
+    if (feedback.actual && feedback.actual !== feedback.prediction) points += 5;
+    
+    userData.dailySubmissions++;
+    if (userData.dailySubmissions === 10) points += 20;
+    
+    userData.totalPoints += points;
+
+    // Save user data
+    await MODEL_KV.put(`user:${feedback.userId}`, JSON.stringify(userData));
+
+    // Save to global history
+    const historyEntry = {
+      ...feedback,
+      points,
+      timestamp: now.toISOString(),
+      userId: feedback.userId
+    };
+    
+    await MODEL_KV.put(`history:${now.getTime()}`, JSON.stringify(historyEntry));
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    });
+  } catch (error) {
+    return errorResponse(error, corsHeaders);
+  }
+}

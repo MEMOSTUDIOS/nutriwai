@@ -333,3 +333,70 @@ function loadModel() {
         }
     }
 }
+
+// In app.js
+let userId = localStorage.getItem('userId') || crypto.randomUUID();
+localStorage.setItem('userId', userId);
+
+// Update processImage function
+async function processImage(imageData) {
+  // Add loading state
+  showLoadingState();
+  try {
+    const result = await (useServerAPI ? 
+      processImageWithAPI(imageData) : 
+      makeLocalPrediction()
+    );
+    
+    // Update UI
+    currentImageData = imageData;
+    displayPrediction(result);
+    
+    // Prefetch user data
+    if(useServerAPI) updateUserStats();
+    
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+async function updateUserStats() {
+  try {
+    const response = await fetch(`${apiUrl}/api/user-stats?userId=${userId}`);
+    const stats = await response.json();
+    
+    document.getElementById('userPoints').textContent = stats.totalPoints;
+    document.getElementById('dailyProgress').value = stats.dailySubmissions;
+    document.getElementById('dailyCount').textContent = 
+      `${stats.dailySubmissions}/10 daily submissions`;
+      
+    updateLeaderboard();
+  } catch (error) {
+    console.error('Failed to update stats:', error);
+  }
+}
+
+// Add history fetching to app.js
+async function loadGlobalHistory() {
+  try {
+    const response = await fetch(`${apiUrl}/api/global-history`);
+    const history = await response.json();
+    
+    history.forEach(entry => addHistoryRow(entry));
+  } catch (error) {
+    console.error('Failed to load global history:', error);
+  }
+}
+
+function addHistoryRow(entry) {
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td><img src="${entry.imageData}" alt="${entry.actual}"></td>
+    <td>${entry.prediction}</td>
+    <td>${entry.actual}</td>
+    <td>${entry.userId.slice(0, 6)}</td>
+    <td>${new Date(entry.timestamp).toLocaleDateString()}</td>
+    <td>${entry.points}</td>
+  `;
+  historyTableBody.prepend(row);
+}

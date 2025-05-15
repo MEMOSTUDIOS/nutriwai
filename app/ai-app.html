@@ -42,7 +42,30 @@
                 <button id="submitCorrectLabel">Submit</button>
             </div>
         </div>
-        
+        <!-- Add to ai-app.html before history section -->
+<div class="user-points">
+  <h2>Your Points: <span id="userPoints">0</span></h2>
+  <div class="daily-progress">
+    <progress id="dailyProgress" value="0" max="10"></progress>
+    <span id="dailyCount">0/10 daily submissions</span>
+  </div>
+</div>
+
+<div class="ranking-table">
+  <h2>Global Leaderboard</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>User</th>
+        <th>Total Points</th>
+        <th>Today's Points</th>
+      </tr>
+    </thead>
+    <tbody id="leaderboardBody">
+    </tbody>
+  </table>
+</div>
         <div id="history">
             <h2>Learning History</h2>
             <table id="historyTable">

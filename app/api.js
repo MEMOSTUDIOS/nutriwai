@@ -1,4 +1,4 @@
-const apiUrl = 'https://your-api-url.com'; // Change this to your actual API URL
+const apiUrl = 'https://nutriwai.com/app/worker.js'; // Change this to your actual API URL
 
 // Function to check if server is available
 async function checkServerAvailability() {
