@@ -184,22 +184,3 @@ app.get('/api/model-info', (req, res) => {
 app.listen(port, () => {
   console.log(`Food Recognition API running on port ${port}`);
 });
-
-// Add to server.js
-// User stats endpoint
-app.get('/api/user-stats', (req, res) => {
-  const userId = req.query.userId;
-  const userData = getUserData(userId); // Implement your data retrieval
-  
-  res.json({
-    totalPoints: userData.totalPoints,
-    dailySubmissions: userData.dailySubmissions
-  });
-});
-
-// Leaderboard endpoint
-app.get('/api/leaderboard', (req, res) => {
-  // Implement logic to retrieve top users
-  const leaderboard = getTopUsers(10); // Your ranking logic
-  res.json(leaderboard);
-});
