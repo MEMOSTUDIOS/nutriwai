@@ -1,86 +1,35 @@
-const apiUrl = 'https://nutriwai.com/app/worker.js'; // Change this to your actual API URL
+const apiUrl = 'nutriwai3.pages.dev' // Update with actual URL
 
-// Function to check if server is available
-async function checkServerAvailability() {
+// Add new API functions
+async function fetchGlobalHistory(page = 1, limit = 20) {
   try {
-    const response = await fetch(`${apiUrl}/api/model-info`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (response.ok) {
-      console.log('Connected to server API');
-      return true;
-    } else {
-      console.log('Server API available but returned error');
-      return false;
-    }
+    const response = await fetch(`${apiUrl}/api/global-history?page=${page}&limit=${limit}`)
+    if (!response.ok) throw new Error('Failed to fetch history')
+    return await response.json()
   } catch (error) {
-    console.log('Running in offline mode, using local storage');
-    return false;
+    console.error('History fetch error:', error)
+    return { success: false, error: error.message }
   }
 }
 
-// Process image using server API if available
-async function processImageWithAPI(imageData) {
+async function fetchLeaderboard() {
   try {
-    const response = await fetch(`${apiUrl}/api/predict-base64`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ image: imageData })
-    });
-    
-    const result = await response.json();
-    
-    if (result.success) {
-      return {
-        success: true,
-        prediction: result.prediction,
-        confidence: result.confidence
-      };
-    } else {
-      throw new Error(result.error || 'Unknown API error');
-    }
+    const response = await fetch(`${apiUrl}/api/leaderboard`)
+    if (!response.ok) throw new Error('Failed to fetch leaderboard')
+    return await response.json()
   } catch (error) {
-    console.error('Error with API prediction:', error);
-    return { success: false, error: error.message };
+    console.error('Leaderboard fetch error:', error)
+    return { success: false, error: error.message }
   }
 }
 
-// Send feedback to server
-async function sendFeedbackToAPI(feedback) {
+async function fetchUserStats(userId) {
   try {
-    const response = await fetch(`${apiUrl}/api/feedback`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(feedback)
-    });
-    
-    const result = await response.json();
-    return result.success;
+    const response = await fetch(`${apiUrl}/api/user-stats?userId=${userId}`)
+    if (!response.ok) throw new Error('Failed to fetch user stats')
+    return await response.json()
   } catch (error) {
-    console.error('Error sending feedback to API:', error);
-    return false;
+    console.error('User stats fetch error:', error)
+    return { success: false, error: error.message }
   }
 }
-
-// Initialize app with server check
-let useServerAPI = false;
-
-document.addEventListener('DOMContentLoaded', async () => {
-  useServerAPI = await checkServerAvailability();
-  
-  // Load model from localStorage if not using server
-  if (!useServerAPI) {
-    loadModel();
-  }
-  
-  // Initialize camera
-  initCamera();
-});

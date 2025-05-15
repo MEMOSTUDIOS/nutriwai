@@ -400,3 +400,69 @@ function addHistoryRow(entry) {
   `;
   historyTableBody.prepend(row);
 }
+
+// Add pagination state
+let historyPage = 1
+const historyLimit = 20
+let hasMoreHistory = true
+
+// Add loading state management
+const loadingStates = {
+  history: false,
+  prediction: false,
+  feedback: false
+}
+
+function setLoadingState(type, isLoading) {
+  loadingStates[type] = isLoading
+  document.querySelectorAll(`[data-loading="${type}"]`).forEach(el => {
+    el.classList.toggle('loading', isLoading)
+  })
+}
+
+// Enhanced history loading
+async function loadMoreHistory() {
+  if (!hasMoreHistory || loadingStates.history) return
+  
+  setLoadingState('history', true)
+  try {
+    const result = await fetchGlobalHistory(historyPage, historyLimit)
+    if (result.success) {
+      result.data.forEach(addHistoryRow)
+      historyPage++
+      hasMoreHistory = !!result.nextCursor
+    }
+  } catch (error) {
+    showError('Failed to load more history')
+  } finally {
+    setLoadingState('history', false)
+  }
+}
+
+// Add infinite scroll
+window.addEventListener('scroll', () => {
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+    loadMoreHistory()
+  }
+})
+
+// Enhanced error handling
+function showError(message) {
+  const errorEl = document.createElement('div')
+  errorEl.className = 'error-message'
+  errorEl.textContent = message
+  document.body.prepend(errorEl)
+  setTimeout(() => errorEl.remove(), 5000)
+}
+
+// Update processImage with loading state
+async function processImage(imageData) {
+  setLoadingState('prediction', true)
+  try {
+    // ... existing processImage logic ...
+  } catch (error) {
+    showError('Image processing failed: ' + error.message)
+  } finally {
+    setLoadingState('prediction', false)
+  }
+}
