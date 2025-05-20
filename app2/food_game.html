@@ -112,13 +112,15 @@
       FOOD_DICTIONARY // To get imageText from food name
     } from './memory_refactored.js';
 
-    // Placeholder image service (you can replace this with your own images)
-    const foodImages = name => `/api/placeholder/300/300?text=${encodeURIComponent(FOOD_DICTIONARY[name.toLowerCase()]?.imageText || name)}`;
+    // *** CRITICAL FIX: Use a reliable placeholder image service ***
+    // This function now generates URLs for via.placeholder.com
+    const foodImages = nameKey => `https://via.placeholder.com/300x300?text=${encodeURIComponent(FOOD_DICTIONARY[nameKey.toLowerCase()]?.name || nameKey)}`;
+
 
     // Game state (score and round will be persisted)
     let score = parseInt(localStorage.getItem('gameScore') || '0');
     let round = parseInt(localStorage.getItem('gameRound') || '0');
-    let currentPair = []; // Stores the food names for the current round
+    let currentPair = []; // Stores the food names (keys from FOOD_DICTIONARY) for the current round
 
     // Initialize AI Model
     const ai = new AIModel();
@@ -138,11 +140,12 @@
         const history = getUserHistory();
         // Display history in reverse chronological order (newest first)
         history.slice().reverse().forEach(entry => {
-            const row = document.createElement('tr');
+            // Use the foodName (key) from history to get the display name from FOOD_DICTIONARY
             const foodDisplayName = FOOD_DICTIONARY[entry.foodName.toLowerCase()]?.name || entry.foodName;
             const points = entry.isHealthy ? 5 : -5;
             const timestampDate = new Date(entry.timestamp);
 
+            const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${entry.round}</td>
                 <td>${foodDisplayName}</td>
@@ -150,7 +153,7 @@
                 <td style="color: ${points > 0 ? 'green' : 'red'}">${points > 0 ? '+' : ''}${points}</td>
                 <td>${timestampDate.toLocaleString()}</td>
             `;
-            historyBody.appendChild(row); // Use appendChild to maintain order if reversing initially
+            historyBody.appendChild(row);
         });
     }
 
@@ -159,15 +162,12 @@
       round++;
       localStorage.setItem('gameRound', round); // Save round
       
+      // Select keys from HEALTHY_FOOD_NAMES and UNHEALTHY_FOOD_NAMES
       const healthyKey = HEALTHY_FOOD_NAMES[Math.floor(Math.random() * HEALTHY_FOOD_NAMES.length)];
       const unhealthyKey = UNHEALTHY_FOOD_NAMES[Math.floor(Math.random() * UNHEALTHY_FOOD_NAMES.length)];
       
-      // Ensure the food names are the lowercase keys for internal use, but display the proper name
-      const healthyFoodName = healthyKey;
-      const unhealthyFoodName = unhealthyKey;
-
-      const order = Math.random() < 0.5 ? [healthyFoodName, unhealthyFoodName] : [unhealthyFoodName, healthyFoodName];
-      currentPair = order;
+      const order = Math.random() < 0.5 ? [healthyKey, unhealthyKey] : [unhealthyKey, healthyKey];
+      currentPair = order; // Store the keys for the current round
 
       document.getElementById('food1').src = foodImages(order[0]);
       document.getElementById('food1').alt = FOOD_DICTIONARY[order[0]]?.name || order[0];
@@ -177,22 +177,21 @@
 
     // Handles user food selection
     function selectFood(index) {
-      const selectedFoodKey = currentPair[index]; // This will be the lowercase key
-      const foodData = FOOD_DICTIONARY[selectedFoodKey];
+      const selectedFoodKey = currentPair[index]; // This is the key (e.g., "apple")
+      const foodData = FOOD_DICTIONARY[selectedFoodKey.toLowerCase()]; // Ensure lowercase for lookup
 
       if (!foodData) {
           console.error("Selected food not found in dictionary:", selectedFoodKey);
           return;
       }
 
-      const selectedDisplayName = foodData.name; // Display name
       const isHealthy = foodData.isHealthy;
       const points = isHealthy ? 5 : -5;
 
       updateScore(score + points); // Update and save score
 
-      // Log interaction with the AI and memory system
-      logUserInteraction(selectedFoodKey, isHealthy, round, index); // Pass the key and position
+      // Log interaction with the AI and memory system, passing the food key
+      logUserInteraction(selectedFoodKey, isHealthy, round, index); 
 
       // Re-render history to show the latest entry
       renderHistory();
@@ -202,7 +201,8 @@
 
     // Updates the AI statistics display
     function updateAIStats() {
-      const stats = generateMemorySummary();
+      // The generateMemorySummary function itself handles getting data from the AI model
+      const stats = generateMemorySummary(); 
       document.getElementById('aiSize').textContent = stats.memoryUsed;
       document.getElementById('learningProgress').textContent = `Total Entries: ${stats.totalEntries}, Known Patterns: ${stats.patternsKnown}`;
     }
