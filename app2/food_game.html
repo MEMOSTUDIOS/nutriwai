@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Healthy Food Game</title>
+  <title>nutriwai learn - Eat Smarter with AI</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -63,6 +63,7 @@
         color: #e74c3c; /* Reddish for score emphasis */
     }
     .ai-stats {
+ display: none;
         background-color: #ecf0f1;
         padding: 15px;
         border-radius: 8px;
@@ -72,12 +73,13 @@
     .ai-stats p {
         margin: 5px 0;
     }
+.text-center {text-align:center;}
   </style>
 </head>
 <body>
-  <h1>Healthy Food Game</h1>
-  <p>Click on the healthy food to gain points!</p>
-  <div class="score">Score: <span id="score">0</span></div>
+  <h1>nutriwai - Eat Smarter with AI</h1>
+  <p class="text-center">Click on the healthy food to gain points</p>
+  <div class="score">POINTS: <span id="score">0</span></div>
 
   <div class="image-container">
     <img id="food1" class="food-image" alt="Food 1" data-food-id="" onclick="selectFood(0)" />
@@ -90,7 +92,7 @@
     <p>Progress: <span id="learningProgress">Loading...</span></p>
   </div>
 
-  <h3>Your History</h3>
+  <h3>Leaderboard</h3>
   <table>
     <thead>
       <tr><th>Round</th><th>Food</th><th>Healthy?</th><th>Points</th><th>Timestamp</th></tr>
