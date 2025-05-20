@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Healthy Food Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    h1, .score, .ai-stats, h3 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .image-container {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      gap: 20px; /* Spacing between images */
+    }
+    .food-image {
+      width: 300px;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 4px solid #3498db; /* A more vibrant blue */
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .food-image:hover {
+      transform: scale(1.03); /* Slightly less aggressive scale */
+      border-color: #2980b9; /* Darker blue on hover */
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden; /* Ensures border-radius applies to table */
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #3498db; /* Match button/border color */
+      color: white;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .score {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        color: #e74c3c; /* Reddish for score emphasis */
+    }
+    .ai-stats {
+        background-color: #ecf0f1;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        color: #2c3e50;
+    }
+    .ai-stats p {
+        margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Healthy Food Game</h1>
+  <p>Click on the healthy food to gain points!</p>
+  <div class="score">Score: <span id="score">0</span></div>
+
+  <div class="image-container">
+    <img id="food1" class="food-image" alt="Food 1" onclick="selectFood(0)" />
+    <img id="food2" class="food-image" alt="Food 2" onclick="selectFood(1)" />
+  </div>
+
+  <div class="ai-stats">
+    <h3>AI Status</h3>
+    <p>Model Size: <span id="aiSize">0 KB</span></p>
+    <p>Progress: <span id="learningProgress">Loading...</span></p>
+  </div>
+
+  <h3>Your History</h3>
+  <table>
+    <thead>
+      <tr><th>Round</th><th>Food</th><th>Healthy?</th><th>Points</th><th>Timestamp</th></tr>
+    </thead>
+    <tbody id="historyBody"></tbody>
+  </table>
+
+  <script type="module">
+    // Import AIModel class
+    import { AIModel } from './ai_food_game_refactored.js';
+    // Import memory management functions and food data
+    import {
+      initializeMemory,
+      logUserInteraction,
+      generateMemorySummary,
+      getUserHistory,
+      HEALTHY_FOOD_NAMES,
+      UNHEALTHY_FOOD_NAMES,
+      FOOD_DICTIONARY // To get imageText from food name
+    } from './memory_refactored.js';
+
+    // Placeholder image service (you can replace this with your own images)
+    const foodImages = name => `/api/placeholder/300/300?text=${encodeURIComponent(FOOD_DICTIONARY[name.toLowerCase()]?.imageText || name)}`;
+
+    // Game state (score and round will be persisted)
+    let score = parseInt(localStorage.getItem('gameScore') || '0');
+    let round = parseInt(localStorage.getItem('gameRound') || '0');
+    let currentPair = []; // Stores the food names for the current round
+
+    // Initialize AI Model
+    const ai = new AIModel();
+    initializeMemory(ai); // Pass the AI model instance for memory management
+
+    // Function to update the score display and save to localStorage
+    function updateScore(newScore) {
+      score = newScore;
+      document.getElementById('score').textContent = score;
+      localStorage.setItem('gameScore', score);
+    }
+
+    // Function to render history from loaded data
+    function renderHistory() {
+        const historyBody = document.getElementById('historyBody');
+        historyBody.innerHTML = ''; // Clear existing history
+        const history = getUserHistory();
+        // Display history in reverse chronological order (newest first)
+        history.slice().reverse().forEach(entry => {
+            const row = document.createElement('tr');
+            const foodDisplayName = FOOD_DICTIONARY[entry.foodName.toLowerCase()]?.name || entry.foodName;
+            const points = entry.isHealthy ? 5 : -5;
+            const timestampDate = new Date(entry.timestamp);
+
+            row.innerHTML = `
+                <td>${entry.round}</td>
+                <td>${foodDisplayName}</td>
+                <td>${entry.isHealthy ? 'Yes' : 'No'}</td>
+                <td style="color: ${points > 0 ? 'green' : 'red'}">${points > 0 ? '+' : ''}${points}</td>
+                <td>${timestampDate.toLocaleString()}</td>
+            `;
+            historyBody.appendChild(row); // Use appendChild to maintain order if reversing initially
+        });
+    }
+
+    // Starts a new game round
+    function startRound() {
+      round++;
+      localStorage.setItem('gameRound', round); // Save round
+      
+      const healthyKey = HEALTHY_FOOD_NAMES[Math.floor(Math.random() * HEALTHY_FOOD_NAMES.length)];
+      const unhealthyKey = UNHEALTHY_FOOD_NAMES[Math.floor(Math.random() * UNHEALTHY_FOOD_NAMES.length)];
+      
+      // Ensure the food names are the lowercase keys for internal use, but display the proper name
+      const healthyFoodName = healthyKey;
+      const unhealthyFoodName = unhealthyKey;
+
+      const order = Math.random() < 0.5 ? [healthyFoodName, unhealthyFoodName] : [unhealthyFoodName, healthyFoodName];
+      currentPair = order;
+
+      document.getElementById('food1').src = foodImages(order[0]);
+      document.getElementById('food1').alt = FOOD_DICTIONARY[order[0]]?.name || order[0];
+      document.getElementById('food2').src = foodImages(order[1]);
+      document.getElementById('food2').alt = FOOD_DICTIONARY[order[1]]?.name || order[1];
+    }
+
+    // Handles user food selection
+    function selectFood(index) {
+      const selectedFoodKey = currentPair[index]; // This will be the lowercase key
+      const foodData = FOOD_DICTIONARY[selectedFoodKey];
+
+      if (!foodData) {
+          console.error("Selected food not found in dictionary:", selectedFoodKey);
+          return;
+      }
+
+      const selectedDisplayName = foodData.name; // Display name
+      const isHealthy = foodData.isHealthy;
+      const points = isHealthy ? 5 : -5;
+
+      updateScore(score + points); // Update and save score
+
+      // Log interaction with the AI and memory system
+      logUserInteraction(selectedFoodKey, isHealthy, round, index); // Pass the key and position
+
+      // Re-render history to show the latest entry
+      renderHistory();
+      updateAIStats(); // Update AI stats display
+      startRound(); // Start a new round
+    }
+
+    // Updates the AI statistics display
+    function updateAIStats() {
+      const stats = generateMemorySummary();
+      document.getElementById('aiSize').textContent = stats.memoryUsed;
+      document.getElementById('learningProgress').textContent = `Total Entries: ${stats.totalEntries}, Known Patterns: ${stats.patternsKnown}`;
+    }
+
+    // Initial setup when the page loads
+    window.onload = () => {
+      updateScore(score); // Display initial score
+      renderHistory(); // Render historical data
+      updateAIStats(); // Update AI stats
+      startRound(); // Start the first round
+    };
+
+  </script>
+</body>
+</html>
