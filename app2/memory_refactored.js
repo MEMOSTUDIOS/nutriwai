@@ -1,4 +1,4 @@
-// memory_refactored.js (Corrected)
+// memory_refactored.js
 // Manages game memory, user history, and AI model persistence via localStorage.
 
 // AI Integration - This will hold the AIModel instance
@@ -11,25 +11,24 @@ let USER_HISTORY = [];
 // AI Model State storage key
 const AI_MODEL_STATE_KEY = 'healthyFoodGame_aiModelState';
 
-// --- Food Definitions (Centralized Source of Truth - using numeric IDs) ---
-// This dictionary is used to manage food data consistently.
+// --- Food Definitions (Centralized Source of Truth - using numeric IDs and image filenames) ---
 export const FOOD_DICTIONARY = {
-  1: { name: "Apple", imageText: "Apple", isHealthy: true },
-  2: { name: "Salad", imageText: "Salad", isHealthy: true },
-  3: { name: "Broccoli", imageText: "Broccoli", isHealthy: true },
-  4: { name: "Salmon", imageText: "Salmon", isHealthy: true },
-  5: { name: "Avocado", imageText: "Avocado", isHealthy: true },
-  6: { name: "Nuts", imageText: "Nuts", isHealthy: true },
-  7: { name: "Yogurt", imageText: "Yogurt", isHealthy: true },
-  8: { name: "Oatmeal", imageText: "Oatmeal", isHealthy: true },
-  101: { name: "Pizza", imageText: "Pizza", isHealthy: false },
-  102: { name: "Ice Cream", imageText: "Ice Cream", isHealthy: false },
-  103: { name: "Burger", imageText: "Burger", isHealthy: false },
-  104: { name: "Fries", imageText: "Fries", isHealthy: false },
-  105: { name: "Donut", imageText: "Donut", isHealthy: false },
-  106: { name: "Soda", imageText: "Soda", isHealthy: false },
-  107: { name: "Cake", imageText: "Cake", isHealthy: false },
-  108: { name: "Chips", imageText: "Chips", isHealthy: false }
+  1: { name: "Apple", imageFile: "apple.png", isHealthy: true },
+  2: { name: "Salad", imageFile: "salad.png", isHealthy: true },
+  3: { name: "Broccoli", imageFile: "broccoli.png", isHealthy: true },
+  4: { name: "Salmon", imageFile: "salmon.png", isHealthy: true },
+  5: { name: "Avocado", imageFile: "avocado.png", isHealthy: true },
+  6: { name: "Nuts", imageFile: "nuts.png", isHealthy: true },
+  7: { name: "Yogurt", imageFile: "yogurt.png", isHealthy: true },
+  8: { name: "Oatmeal", imageFile: "oatmeal.png", isHealthy: true },
+  101: { name: "Pizza", imageFile: "pizza.png", isHealthy: false },
+  102: { name: "Ice Cream", imageFile: "icecream.png", isHealthy: false },
+  103: { name: "Burger", imageFile: "burger.png", isHealthy: false },
+  104: { name: "Fries", imageFile: "fries.png", isHealthy: false },
+  105: { name: "Donut", imageFile: "donut.png", isHealthy: false },
+  106: { name: "Soda", imageFile: "soda.png", isHealthy: false },
+  107: { name: "Cake", imageFile: "cake.png", isHealthy: false },
+  108: { name: "Chips", imageFile: "chips.png", isHealthy: false }
 };
 
 // Store numeric IDs for healthy and unhealthy foods
@@ -64,12 +63,7 @@ export function initializeMemory(modelInstance) {
     }
   } catch (e) {
     console.error("Memory: Error initializing memory or loading from localStorage:", e);
-    // If loading fails, start with empty data to prevent breaking the app
     USER_HISTORY = [];
-    // If AI model loading fails, we might still want to re-initialize it here
-    // or ensure the calling code handles a potentially uninitialized aiModelInstance.
-    // For now, assume a new AIModel() is created if the initial one failed to load.
-    // However, the current setup passes it in, so the AI model instance should always exist.
   }
 
   console.log("Memory system initialized with AI integration.");
@@ -94,17 +88,16 @@ export function logUserInteraction(foodId, isHealthy, round, position) {
 
   const historyEntry = {
     round: round,
-    foodId: foodId, // Store ID
-    foodName: foodName, // Store name for display ease
+    foodId: foodId,
+    foodName: foodName,
     isHealthy: isHealthy,
     timestamp: timestamp,
     position: position
   };
 
   USER_HISTORY.push(historyEntry);
-  aiModelInstance.addLearningEntry(foodName, isHealthy, timestamp, position); // AI uses name for patterns
+  aiModelInstance.addLearningEntry(foodName, isHealthy, timestamp, position);
 
-  // Save updated history and AI state to localStorage
   try {
     localStorage.setItem(USER_HISTORY_KEY, JSON.stringify(USER_HISTORY));
     localStorage.setItem(AI_MODEL_STATE_KEY, JSON.stringify(aiModelInstance.getState()));
@@ -133,7 +126,6 @@ export function generateMemorySummary() {
 
   const aiSummary = aiModelInstance.generateSummary();
 
-  // Calculate approximate memory used for history and AI model combined
   const totalMemoryBytes = (JSON.stringify(USER_HISTORY).length + JSON.stringify(aiModelInstance.getState()).length);
 
   return {
@@ -154,14 +146,14 @@ export function getUserHistory() {
   return USER_HISTORY;
 }
 
-// Helper to get food name from ID (used for display in history)
+// Helper to get food name from ID (used for display in history and AI learning)
 export function getFoodNameById(id) {
     return FOOD_DICTIONARY[id]?.name || `Unknown Food (ID: ${id})`;
 }
 
-// Helper to get food image text from ID (used for image placeholder)
-export function getFoodImageTextById(id) {
-    return FOOD_DICTIONARY[id]?.imageText || `Food ID ${id}`;
+// Helper to get food image filename from ID
+export function getFoodImageFileById(id) {
+    return FOOD_DICTIONARY[id]?.imageFile || `default.png`; // Fallback to a default image
 }
 
 // Helper to check if a food ID is healthy

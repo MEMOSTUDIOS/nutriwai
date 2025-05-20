@@ -107,16 +107,16 @@
       logUserInteraction,
       generateMemorySummary,
       getUserHistory,
-      HEALTHY_FOOD_IDS, // Now importing numeric IDs
-      UNHEALTHY_FOOD_IDS, // Now importing numeric IDs
+      HEALTHY_FOOD_IDS,
+      UNHEALTHY_FOOD_IDS,
       FOOD_DICTIONARY, // Still useful for lookup by ID
       getFoodNameById, // Helper to get name from ID
-      getFoodImageTextById, // Helper to get image text from ID
+      getFoodImageFileById, // Helper to get image filename from ID
       isFoodHealthyById // Helper to check health from ID
     } from './memory_refactored.js';
 
-    // IMPORTANT: Updated to get image text by ID
-    const foodImages = foodId => `https://via.placeholder.com/300x300?text=${encodeURIComponent(getFoodImageTextById(foodId))}`;
+    // IMPORTANT: Updated to point to your local assets/images folder
+    const foodImages = foodId => `assets/images/${getFoodImageFileById(foodId)}`;
 
     // Game state (score and round will be persisted)
     let score = parseInt(localStorage.getItem('gameScore') || '0');
@@ -141,7 +141,6 @@
         const history = getUserHistory();
         // Display history in reverse chronological order (newest first)
         history.slice().reverse().forEach(entry => {
-            // Use getFoodNameById to display the correct name from the stored ID
             const foodDisplayName = getFoodNameById(entry.foodId);
             const points = entry.isHealthy ? 5 : -5;
             const timestampDate = new Date(entry.timestamp);
@@ -161,52 +160,45 @@
     // Starts a new game round
     function startRound() {
       round++;
-      localStorage.setItem('gameRound', round); // Save round
+      localStorage.setItem('gameRound', round);
       
-      // Select random food IDs
       const healthyId = HEALTHY_FOOD_IDS[Math.floor(Math.random() * HEALTHY_FOOD_IDS.length)];
       const unhealthyId = UNHEALTHY_FOOD_IDS[Math.floor(Math.random() * UNHEALTHY_FOOD_IDS.length)];
       
       const order = Math.random() < 0.5 ? [healthyId, unhealthyId] : [unhealthyId, healthyId];
-      currentPair = order; // Store the IDs for the current round
+      currentPair = order;
 
-      // Get image elements
       const food1Img = document.getElementById('food1');
       const food2Img = document.getElementById('food2');
 
-      // Set src and alt attributes using IDs and helper functions
       food1Img.src = foodImages(order[0]);
       food1Img.alt = getFoodNameById(order[0]);
-      food1Img.dataset.foodId = order[0]; // Store ID in data attribute for click handler
+      food1Img.dataset.foodId = order[0];
 
       food2Img.src = foodImages(order[1]);
       food2Img.alt = getFoodNameById(order[1]);
-      food2Img.dataset.foodId = order[1]; // Store ID in data attribute for click handler
+      food2Img.dataset.foodId = order[1];
     }
 
-    // Handles user food selection
-    window.selectFood = (index) => { // Make global for onclick in HTML
-      // Get the food ID from the data-food-id attribute of the clicked image
+    window.selectFood = (index) => {
       const clickedImg = document.getElementById(`food${index + 1}`);
-      const selectedFoodId = parseInt(clickedImg.dataset.foodId); // Parse as integer
+      const selectedFoodId = parseInt(clickedImg.dataset.foodId);
 
       if (isNaN(selectedFoodId) || !FOOD_DICTIONARY[selectedFoodId]) {
           console.error("Invalid food ID selected:", selectedFoodId);
           return;
       }
 
-      const isHealthy = isFoodHealthyById(selectedFoodId); // Use helper function
+      const isHealthy = isFoodHealthyById(selectedFoodId);
       const points = isHealthy ? 5 : -5;
 
-      updateScore(score + points); // Update and save score
+      updateScore(score + points);
 
-      // Log interaction with the AI and memory system, passing the food ID
       logUserInteraction(selectedFoodId, isHealthy, round, index); 
 
-      // Re-render history to show the latest entry
       renderHistory();
-      updateAIStats(); // Update AI stats display
-      startRound(); // Start a new round
+      updateAIStats();
+      startRound();
     };
 
     // Updates the AI statistics display
@@ -218,10 +210,10 @@
 
     // Initial setup when the page loads
     window.onload = () => {
-      updateScore(score); // Display initial score
-      renderHistory(); // Render historical data
-      updateAIStats(); // Update AI stats
-      startRound(); // Start the first round
+      updateScore(score);
+      renderHistory();
+      updateAIStats();
+      startRound();
     };
 
   </script>
