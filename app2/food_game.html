@@ -80,8 +80,8 @@
   <div class="score">Score: <span id="score">0</span></div>
 
   <div class="image-container">
-    <img id="food1" class="food-image" alt="Food 1" onclick="selectFood(0)" />
-    <img id="food2" class="food-image" alt="Food 2" onclick="selectFood(1)" />
+    <img id="food1" class="food-image" alt="Food 1" data-food-id="" onclick="selectFood(0)" />
+    <img id="food2" class="food-image" alt="Food 2" data-food-id="" onclick="selectFood(1)" />
   </div>
 
   <div class="ai-stats">
@@ -107,20 +107,21 @@
       logUserInteraction,
       generateMemorySummary,
       getUserHistory,
-      HEALTHY_FOOD_NAMES,
-      UNHEALTHY_FOOD_NAMES,
-      FOOD_DICTIONARY // To get imageText from food name
+      HEALTHY_FOOD_IDS, // Now importing numeric IDs
+      UNHEALTHY_FOOD_IDS, // Now importing numeric IDs
+      FOOD_DICTIONARY, // Still useful for lookup by ID
+      getFoodNameById, // Helper to get name from ID
+      getFoodImageTextById, // Helper to get image text from ID
+      isFoodHealthyById // Helper to check health from ID
     } from './memory_refactored.js';
 
-    // *** CRITICAL FIX: Use a reliable placeholder image service ***
-    // This function now generates URLs for via.placeholder.com
-    const foodImages = nameKey => `https://via.placeholder.com/300x300?text=${encodeURIComponent(FOOD_DICTIONARY[nameKey.toLowerCase()]?.name || nameKey)}`;
-
+    // IMPORTANT: Updated to get image text by ID
+    const foodImages = foodId => `https://via.placeholder.com/300x300?text=${encodeURIComponent(getFoodImageTextById(foodId))}`;
 
     // Game state (score and round will be persisted)
     let score = parseInt(localStorage.getItem('gameScore') || '0');
     let round = parseInt(localStorage.getItem('gameRound') || '0');
-    let currentPair = []; // Stores the food names (keys from FOOD_DICTIONARY) for the current round
+    let currentPair = []; // Stores the food IDs for the current round
 
     // Initialize AI Model
     const ai = new AIModel();
@@ -140,8 +141,8 @@
         const history = getUserHistory();
         // Display history in reverse chronological order (newest first)
         history.slice().reverse().forEach(entry => {
-            // Use the foodName (key) from history to get the display name from FOOD_DICTIONARY
-            const foodDisplayName = FOOD_DICTIONARY[entry.foodName.toLowerCase()]?.name || entry.foodName;
+            // Use getFoodNameById to display the correct name from the stored ID
+            const foodDisplayName = getFoodNameById(entry.foodId);
             const points = entry.isHealthy ? 5 : -5;
             const timestampDate = new Date(entry.timestamp);
 
@@ -162,46 +163,54 @@
       round++;
       localStorage.setItem('gameRound', round); // Save round
       
-      // Select keys from HEALTHY_FOOD_NAMES and UNHEALTHY_FOOD_NAMES
-      const healthyKey = HEALTHY_FOOD_NAMES[Math.floor(Math.random() * HEALTHY_FOOD_NAMES.length)];
-      const unhealthyKey = UNHEALTHY_FOOD_NAMES[Math.floor(Math.random() * UNHEALTHY_FOOD_NAMES.length)];
+      // Select random food IDs
+      const healthyId = HEALTHY_FOOD_IDS[Math.floor(Math.random() * HEALTHY_FOOD_IDS.length)];
+      const unhealthyId = UNHEALTHY_FOOD_IDS[Math.floor(Math.random() * UNHEALTHY_FOOD_IDS.length)];
       
-      const order = Math.random() < 0.5 ? [healthyKey, unhealthyKey] : [unhealthyKey, healthyKey];
-      currentPair = order; // Store the keys for the current round
+      const order = Math.random() < 0.5 ? [healthyId, unhealthyId] : [unhealthyId, healthyId];
+      currentPair = order; // Store the IDs for the current round
 
-      document.getElementById('food1').src = foodImages(order[0]);
-      document.getElementById('food1').alt = FOOD_DICTIONARY[order[0]]?.name || order[0];
-      document.getElementById('food2').src = foodImages(order[1]);
-      document.getElementById('food2').alt = FOOD_DICTIONARY[order[1]]?.name || order[1];
+      // Get image elements
+      const food1Img = document.getElementById('food1');
+      const food2Img = document.getElementById('food2');
+
+      // Set src and alt attributes using IDs and helper functions
+      food1Img.src = foodImages(order[0]);
+      food1Img.alt = getFoodNameById(order[0]);
+      food1Img.dataset.foodId = order[0]; // Store ID in data attribute for click handler
+
+      food2Img.src = foodImages(order[1]);
+      food2Img.alt = getFoodNameById(order[1]);
+      food2Img.dataset.foodId = order[1]; // Store ID in data attribute for click handler
     }
 
     // Handles user food selection
-    function selectFood(index) {
-      const selectedFoodKey = currentPair[index]; // This is the key (e.g., "apple")
-      const foodData = FOOD_DICTIONARY[selectedFoodKey.toLowerCase()]; // Ensure lowercase for lookup
+    window.selectFood = (index) => { // Make global for onclick in HTML
+      // Get the food ID from the data-food-id attribute of the clicked image
+      const clickedImg = document.getElementById(`food${index + 1}`);
+      const selectedFoodId = parseInt(clickedImg.dataset.foodId); // Parse as integer
 
-      if (!foodData) {
-          console.error("Selected food not found in dictionary:", selectedFoodKey);
+      if (isNaN(selectedFoodId) || !FOOD_DICTIONARY[selectedFoodId]) {
+          console.error("Invalid food ID selected:", selectedFoodId);
           return;
       }
 
-      const isHealthy = foodData.isHealthy;
+      const isHealthy = isFoodHealthyById(selectedFoodId); // Use helper function
       const points = isHealthy ? 5 : -5;
 
       updateScore(score + points); // Update and save score
 
-      // Log interaction with the AI and memory system, passing the food key
-      logUserInteraction(selectedFoodKey, isHealthy, round, index); 
+      // Log interaction with the AI and memory system, passing the food ID
+      logUserInteraction(selectedFoodId, isHealthy, round, index); 
 
       // Re-render history to show the latest entry
       renderHistory();
       updateAIStats(); // Update AI stats display
       startRound(); // Start a new round
-    }
+    };
 
     // Updates the AI statistics display
     function updateAIStats() {
-      // The generateMemorySummary function itself handles getting data from the AI model
       const stats = generateMemorySummary(); 
       document.getElementById('aiSize').textContent = stats.memoryUsed;
       document.getElementById('learningProgress').textContent = `Total Entries: ${stats.totalEntries}, Known Patterns: ${stats.patternsKnown}`;
