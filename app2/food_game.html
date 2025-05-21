@@ -63,10 +63,10 @@
         color: #e74c3c; /* Reddish for score emphasis */
     }
     .ai-stats {
- display: none;
+ margin-top: 20px;
         background-color: #ecf0f1;
         padding: 15px;
-        border-radius: 8px;
+        border-radius: 20px;
         margin-bottom: 20px;
         color: #2c3e50;
     }
@@ -86,12 +86,6 @@
     <img id="food2" class="food-image" alt="Food 2" data-food-id="" onclick="selectFood(1)" />
   </div>
 
-  <div class="ai-stats">
-    <h3>AI Status</h3>
-    <p>Model Size: <span id="aiSize">0 KB</span></p>
-    <p>Progress: <span id="learningProgress">Loading...</span></p>
-  </div>
-
   <h3>Leaderboard</h3>
   <table>
     <thead>
@@ -99,6 +93,12 @@
     </thead>
     <tbody id="historyBody"></tbody>
   </table>
+
+<div class="ai-stats">
+    <h3>AI Status</h3>
+    <p>Model Size: <span id="aiSize">0 KB</span></p>
+    <p>Progress: <span id="learningProgress">Loading...</span></p>
+  </div>
 
   <script type="module">
     // Import AIModel class
