@@ -99,7 +99,7 @@
             align-items: center;
             justify-content: center;
             padding: 1rem;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.33);
+            box-shadow: 0 15px 40px rgba(227, 81, 81, 0.33);
             transition: var(--transition);
             position: relative;
             cursor: pointer;
@@ -115,7 +115,7 @@
             height: 0;
             background-color: var(--primary);
             opacity: 0.15;
-            transition: height 0.66s ease;
+            transition: height 0.42s ease;
             z-index: 0;
         }
 
@@ -125,7 +125,7 @@
 
         .feature-card:hover {
             transform: translateY(-15px) rotate(2deg);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.42);
+            box-shadow: 0 15px 35px rgba(227, 81, 81, 0.42);
         }
 
         .feature-card .icon {
@@ -220,7 +220,7 @@
             font-size: 0.8rem;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
-
+.food-image {width: 60px; }
         /* Level badge */
         .level-badge {
             position: absolute;
@@ -292,10 +292,10 @@
         }
 
         .tagline {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             color: #555;
             margin-bottom: 2rem;
-            max-width: 400px;
+            max-width: 650px;
         }
 
         .cta-button {
@@ -359,7 +359,7 @@ margin-bottom: 2rem;
         .input-group textarea {
             width: 100%;
             padding: 0.75rem 1rem;
-            border: 1px solid #eee;
+            border: 1px solid #00c853;
             border-radius: 8px;
             font-size: 0.9rem;
             transition: var(--transition);
@@ -373,11 +373,11 @@ margin-bottom: 2rem;
         }
 
         .submit-button {
-            background-color: var(--primary);
+            background-color: #00662B;
             color: white;
             border: none;
             padding: 0.75rem 1.5rem;
-            font-size: 0.9rem;
+            font-size: 1.2rem;
             font-weight: 600;
 	    letter-spacing: 0.5px;
             border-radius: 50px;
@@ -868,17 +868,17 @@ position: absolute;
             <div class="feature-cards">
                 <div class="feature-card" onclick="addPoint(this, 0)">
                     <div class="points-popup">+1</div>
-                    <div class="icon">🍓</div>
+                    <div class="icon"><img id="food1" class="food-image" alt="Breakfast" src="assets/images/breakfast.png"></div>
                     <div class="text">Breakfast</div>
                 </div>
                 <div class="feature-card" onclick="addPoint(this, 1)">
                     <div class="points-popup">+1</div>
-                    <div class="icon">🥗</div>
+                    <div class="icon"><img id="food2" class="food-image" alt="Lunch" src="assets/images/lunch.png"></div>
                     <div class="text">Lunch</div>
                 </div>
                 <div class="feature-card" onclick="addPoint(this, 2)">
                     <div class="points-popup">+1</div>
-                    <div class="icon">🍲</div>
+                    <div class="icon"><img id="food3" class="food-image" alt="Dinner" src="assets/images/dinner.png"></div>
                     <div class="text">Dinner</div>
                 </div>
             </div>
