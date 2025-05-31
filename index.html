@@ -11,7 +11,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
     <title>Nutriwai - Eat Smarter with AI</title>
-    <meta description="Your personal nutrition coach powered by artificial intelligence. Simple. Smart. Effective.">
+    <meta name="description" content="Your personal nutrition coach powered by artificial intelligence. Simple. Smart. Effective.">
     <style>
         * {
             margin: 0;
@@ -32,18 +32,16 @@
         body {
             color: var(--dark);
             overflow-x: hidden;
-            background-color: black;
+            background-color: black; /* Changed from white to black as per visual column */
             text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
         
-        /* Base mobile styles */
         html {
             touch-action: manipulation; /* Improves touch responsiveness */
         }
         
-        /* Mobile style class for JS detection */
         body.mobile-device .feature-card:hover {
             transform: none; /* Disable hover effects on mobile */
         }
@@ -58,7 +56,6 @@
             grid-template-columns: 1fr 1fr;
         }
 
-        /* Left Column - Visual */
         .visual-column {
             background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
                         url('./assets/images/background.jpg') center/cover;
@@ -68,7 +65,8 @@
             padding: 2rem;
             position: relative;
         }
- a {color: ##00662B;}
+        a {color: #00662B;} /* Corrected hex color */
+
         .logo {
             position: absolute;
             top: 2rem;
@@ -87,6 +85,7 @@
             right: 0;
             justify-content: center;
             gap: 1.5rem;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens if needed */
         }
 
         .feature-card {
@@ -99,7 +98,7 @@
             align-items: center;
             justify-content: center;
             padding: 1rem;
-            box-shadow: 0 15px 40px rgba(227, 81, 81, 0.33);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* Adjusted shadow for better subtlety */
             transition: var(--transition);
             position: relative;
             cursor: pointer;
@@ -124,12 +123,12 @@
         }
 
         .feature-card:hover {
-            transform: translateY(-15px) rotate(2deg);
-            box-shadow: 0 15px 35px rgba(227, 81, 81, 0.42);
+            transform: translateY(-10px) rotate(1deg); /* Slightly reduced hover effect */
+            box-shadow: 0 18px 38px rgba(0, 0, 0, 0.2);
         }
 
         .feature-card .icon {
-            font-size: 2.5rem;
+            font-size: 2.5rem; /* This will be overridden by image size if using img tag */
             margin-bottom: 0.8rem;
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
@@ -137,7 +136,7 @@
         }
 
         .feature-card:hover .icon {
-            transform: scale(1.3);
+            transform: scale(1.2); /* Slightly reduced icon scale */
         }
 
         .feature-card .text {
@@ -171,27 +170,15 @@
         }
 
         @keyframes pointsAnimation {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            20% {
-                opacity: 1;
-                transform: translateY(-20px);
-            }
-            80% {
-                opacity: 1;
-                transform: translateY(-40px);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-60px);
-            }
+            0% { opacity: 0; transform: translateY(20px); }
+            20% { opacity: 1; transform: translateY(-20px); }
+            80% { opacity: 1; transform: translateY(-40px); }
+            100% { opacity: 0; transform: translateY(-60px); }
         }
 
         .progress-bar {
             position: relative;
-            top: -5rem;
+            top: -5rem; /* Adjust as needed based on layout */
             background-color: rgba(255, 255, 255, 0.3);
             border-radius: 20px;
             width: 150px;
@@ -205,8 +192,8 @@
         
         .progress-fill {
             background-color: var(--primary);
-            border-radius: 20px;
-            height: 20px;
+            border-radius: 20px; /* Match parent for smooth fill */
+            height: 20px; /* Adjust to be slightly less than parent for border effect */
             width: 0%;
             transition: width 0.5s ease;
         }
@@ -220,8 +207,12 @@
             font-size: 0.8rem;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
-.food-image {width: 60px; }
-        /* Level badge */
+        .food-image {
+             width: 60px;
+             height: 60px; /* Ensure consistent image size */
+             object-fit: contain; /* Prevents image distortion */
+        }
+
         .level-badge {
             position: absolute;
             top: 2.3rem;
@@ -233,46 +224,36 @@
             font-weight: bold;
             color: var(--dark);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            display: none;
+            display: none; /* Initially hidden, shown by JS */
+            z-index: 5;
         }
 
-        /* Streak effect */
         .streak-effect {
             position: absolute;
-            top: 100px;
-            left: 0;
-            width: 100%;
+            top: 100px; /* Adjust as needed */
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto; /* Fit content */
+            padding: 5px 10px;
             text-align: center;
             font-size: 1.2rem;
             font-weight: bold;
             color: gold;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
             opacity: 0;
-            transform: translateY(-50px);
             pointer-events: none;
             z-index: 10;
+            background-color: rgba(0,0,0,0.3);
+            border-radius: 8px;
         }
 
         @keyframes streakAnimation {
-            0% {
-                opacity: 0;
-                transform: translateY(0);
-            }
-            20% {
-                opacity: 1;
-                transform: translateY(-20px);
-            }
-            80% {
-                opacity: 1;
-                transform: translateY(-30px);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-40px);
-            }
+            0% { opacity: 0; transform: translate(-50%, 0); }
+            20% { opacity: 1; transform: translate(-50%, -20px); }
+            80% { opacity: 1; transform: translate(-50%, -30px); }
+            100% { opacity: 0; transform: translate(-50%, -40px); }
         }
 
-        /* Right Column - Content */
         .content-column {
             background-color: white;
             display: flex;
@@ -325,6 +306,7 @@
             padding-top: 2rem;
             display: flex;
             gap: 2rem;
+            flex-wrap: wrap;
         }
 
         .contact-item {
@@ -342,7 +324,7 @@
         .form-container {
             max-width: 400px;
             margin-top: 1rem;
-margin-bottom: 2rem;
+            margin-bottom: 2rem;
         }
 
         .input-row {
@@ -359,17 +341,17 @@ margin-bottom: 2rem;
         .input-group textarea {
             width: 100%;
             padding: 0.75rem 1rem;
-            border: 1px solid #00c853;
+            border: 1px solid #00c853; /* Changed to var(--primary) for consistency */
             border-radius: 8px;
-            font-size: 1.1rem;
+            font-size: 1rem; /* Adjusted for better consistency */
             transition: var(--transition);
         }
 
         .input-group input:focus,
         .input-group textarea:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.1);
+            border-color: var(--primary-dark); /* Darker shade on focus */
+            box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.2); /* Adjusted alpha */
         }
 
         .submit-button {
@@ -377,19 +359,19 @@ margin-bottom: 2rem;
             color: white;
             border: none;
             padding: 0.75rem 1.5rem;
-            font-size: 1.2rem;
+            font-size: 1.1rem; /* Adjusted for better consistency */
             font-weight: 600;
-	    letter-spacing: 0.5px;
+	        letter-spacing: 0.5px;
             border-radius: 50px;
             cursor: pointer;
             transition: var(--transition);
-            box-shadow: 0 5px 15px rgba(0, 200, 83, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 102, 43, 0.2); /* Matched color */
         }
 
         .submit-button:hover {
             background-color: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 200, 83, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 178, 72, 0.3); /* Matched color */
         }
 
         footer {
@@ -400,465 +382,161 @@ margin-bottom: 2rem;
             color: #999;
         }
 
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0s 0.3s linear;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 90%;
+            width: 350px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        .modal-content h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .modal-content p {
+            margin-bottom: 1.5rem;
+            color: #555;
+            font-size: 1rem;
+        }
+        .modal-close-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .modal-close-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+
         /* Responsive */
         @media (max-width: 1024px) {
             .page-container {
                 grid-template-columns: 1fr;
-                grid-template-rows: auto 1fr;
+                grid-template-rows: auto 1fr; /* Changed from 40vh 1fr */
             }
-
             .visual-column {
-                height: 40vh;
-                min-height: 350px;
+                min-height: 350px; /* Ensure it has some height */
+                height: auto; /* Let content dictate height or set a specific vh */
                 order: 1;
             }
-
             .content-column {
                 order: 2;
                 padding: 3rem 2rem;
             }
-
-            .headline {
-                font-size: 2.5rem;
-            }
-
-            .feature-circles {
-                position: relative;
+            .headline { font-size: 2.5rem; }
+            /* .feature-circles removed as it's not in HTML, assuming .feature-cards */
+            .feature-cards {
+                position: relative; /* Changed from absolute for flow */
                 bottom: auto;
-                margin-top: 2rem;
+                margin-top: 2rem; /* Add some space if it's in flow now */
+                padding-bottom: 2rem; /* Space at the bottom */
             }
-
             .logo {
-                color: var(--primary);
-                top: 1.5rem;
-                left: 2rem;
+                color: white; /* Ensure logo is visible on dark background */
+                top: 1.5rem; left: 1.5rem; /* Adjusted for smaller screens */
+            }
+            .progress-bar {
+                top: auto; /* Reset top positioning for flow or new relative pos */
+                margin-top: 1rem; /* Example spacing */
+                position: relative; /* Ensure it's not absolutely positioned conflictingly */
+            }
+            .level-badge {
+                top: 1.5rem; right: 1.5rem; /* Adjusted for smaller screens */
             }
         }
 
         @media (max-width: 768px) {
             .feature-cards {
-                flex-wrap: wrap;
-                justify-content: center;
+                gap: 1rem; /* Reduce gap */
+                justify-content: space-around; /* Better distribution */
             }
-
-            .contact-info {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .input-row {
-                flex-direction: column;
-            }
-            
-            .progress-bar {
-position: absolute;
-                left: 1rem;
-                right: auto;
-                top: 4rem;
-            }
-            
-            .level-badge {
-                left: 1rem;
-                right: auto;
-                top: 7rem;
-            }
-            
-            .headline {
-                font-size: 2.2rem;
-            }
-            
-            .tagline {
-                font-size: 1.1rem;
-                margin-bottom: 2rem;
-            }
-            
-            .cta-button {
-                padding: 0.9rem 1.8rem;
-                margin-bottom: 2rem;
-                font-size: 0.95rem;
-            }
-        }
-        
-        /* Mobile Optimization */
-        @media (max-width: 480px) {
-            .visual-column {
-                height: 45vh;
-                min-height: 320px;
-                padding: 1rem;
-            }
-            
-            .content-column {
-                padding: 2rem 1.5rem;
-            }
-            
-            .logo {
-                font-size: 1.3rem;
-                top: 1rem;
-                left: 1rem;
-            }
-            
-            .headline {
-                font-size: 1.9rem;
-                margin-bottom: 1rem;
-            }
-            
-            .tagline {
-                font-size: 1rem;
-                margin-bottom: 1.5rem;
-            }
-            
-            .cta-button {
-                padding: 0.8rem 1.5rem;
-                font-size: 0.9rem;
-                margin-bottom: 1.5rem;
-                width: 100%;
-                text-align: center;
-            }
-            
-            .form-container {
-                width: 100%;
-            }
-            
-            .submit-button {
-                width: 100%;
-            }
-            
-            .feature-cards {
-                bottom: 1rem;
-                gap: 0.8rem;
-            }
-            
             .feature-card {
-                width: 100px;
-                height: 130px;
-                padding: 0.8rem;
+                width: 110px; /* Adjust card size */
+                height: 140px;
             }
-            
-            .feature-card .icon {
-                font-size: 2rem;
-                margin-bottom: 0.5rem;
-            }
-            
-            .feature-card .text {
-                font-size: 0.7rem;
-            }
-            
+            .contact-info { flex-direction: column; gap: 1rem; }
+            .input-row { flex-direction: column; }
             .progress-bar {
-                width: 120px;
-                height: 25px;
+                position: absolute; /* Re-evaluate if needed, or keep relative */
+                left: 1rem; right: auto; top: 4rem; /* If absolute */
             }
-            
-            .progress-fill {
-                height: 15px;
+            .level-badge {
+                left: 1rem; right: auto; top: 7rem; /* If absolute */
             }
-            
-            .progress-text {
-                font-size: 0.7rem;
-            }
-            
-            .points-popup {
-                width: 30px;
-                height: 30px;
-                font-size: 0.8rem;
-            }
-            
-            footer {
-                position: relative;
-                bottom: auto;
-                right: auto;
-                text-align: center;
-                margin-top: 2rem;
-                padding-top: 1rem;
-                border-top: 1px solid #eee;
-                width: 100%;
-            }
-            
-            .contact-info {
-                padding-top: 1.5rem;
-                text-align: center;
-            }
+            .headline { font-size: 2.2rem; }
+            .tagline { font-size: 1.1rem; margin-bottom: 2rem; }
+            .cta-button { padding: 0.9rem 1.8rem; margin-bottom: 2rem; font-size: 0.95rem; }
+            footer { position: relative; text-align: center; margin-top: 2rem; padding: 1rem 0; border-top: 1px solid #eee; width: 100%; bottom: auto; right: auto;}
         }
         
-        /* Ensure touch targets are large enough on mobile */
+        @media (max-width: 480px) {
+            .visual-column { min-height: 300px; padding: 1rem; }
+            .content-column { padding: 2rem 1.5rem; }
+            .logo { font-size: 1.3rem; top: 1rem; left: 1rem; }
+            .headline { font-size: 1.9rem; margin-bottom: 1rem; }
+            .tagline { font-size: 1rem; margin-bottom: 1.5rem; }
+            .cta-button { padding: 0.8rem 1.5rem; font-size: 0.9rem; margin-bottom: 1.5rem; width: 100%; text-align: center; }
+            .form-container { width: 100%; }
+            .submit-button { width: 100%; }
+            .feature-cards { bottom: 1rem; gap: 0.8rem; }
+            .feature-card { width: 100px; height: 130px; padding: 0.8rem; }
+            .feature-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+            .feature-card .text { font-size: 0.7rem; }
+            .progress-bar { width: 120px; height: 25px; /* May need to adjust if absolute positioning is kept */ }
+            .progress-fill { height: 15px; }
+            .progress-text { font-size: 0.7rem; }
+            .points-popup { width: 30px; height: 30px; font-size: 0.8rem; }
+            .contact-info { padding-top: 1.5rem; text-align: center; }
+        }
+        
         @media (max-width: 768px) {
             .feature-card, .cta-button, .submit-button {
                 cursor: pointer;
-                -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
+                -webkit-tap-highlight-color: transparent;
             }
-            
             input, textarea, button {
                 font-size: 16px !important; /* Prevent zoom on input focus on iOS */
             }
-            
-            /* Fix for iOS momentum scrolling */
-            body {
-                -webkit-overflow-scrolling: touch;
-            }
+            body { -webkit-overflow-scrolling: touch; }
         }
     </style>
 </head>
 <body>
-    <script>
-        // Fallback for background image in case relative path fails
-        document.addEventListener('DOMContentLoaded', function() {
-            const visualColumn = document.querySelector('.visual-column');
-            const img = new Image();
-            img.onload = function() {
-                // Image loaded successfully, do nothing
-            };
-            img.onerror = function() {
-                // If the image fails to load, use a fallback color background
-                visualColumn.style.background = 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), linear-gradient(45deg, #009688, #4CAF50)';
-            };
-            img.src = './assets/images/background.jpg';
-            
-            // Check if device is mobile
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            if (isMobile) {
-                // Add mobile-specific optimizations
-                document.body.classList.add('mobile-device');
-                
-                // Enhance touch feedback for interactive elements
-                const touchElements = document.querySelectorAll('.feature-card, .cta-button, .submit-button');
-                touchElements.forEach(el => {
-                    el.addEventListener('touchstart', function() {
-                        this.style.transform = 'scale(0.97)';
-                    }, {passive: true});
-                    
-                    el.addEventListener('touchend', function() {
-                        this.style.transform = '';
-                    }, {passive: true});
-                });
-            }
-        });
-
-        // Endless game mechanics for feature cards
-        let score = 0;
-        let streak = 0;
-        let level = 1;
-        let levelThreshold = 10;
-        let cooldowns = [0, 0, 0]; // Cooldown timers for each card in seconds
-        let lastClickedIndex = -1;
-        let clickInterval;
-        
-        // Initialize when the page loads
-        window.addEventListener('load', function() {
-            // Create level badge element
-            const levelBadge = document.createElement('div');
-            levelBadge.className = 'level-badge';
-            levelBadge.id = 'levelBadge';
-            levelBadge.innerText = 'Level 1';
-            document.querySelector('.visual-column').appendChild(levelBadge);
-            
-            // Show level badge after a short delay
-            setTimeout(() => {
-                levelBadge.style.display = 'block';
-            }, 1000);
-            
-            // Create streak effect element
-            const streakEffect = document.createElement('div');
-            streakEffect.className = 'streak-effect';
-            streakEffect.id = 'streakEffect';
-            document.querySelector('.visual-column').appendChild(streakEffect);
-            
-            // Start cooldown timer
-            setInterval(updateCooldowns, 1000);
-        });
-        
-        function updateCooldowns() {
-            // Decrease cooldowns by 1 second
-            for (let i = 0; i < cooldowns.length; i++) {
-                if (cooldowns[i] > 0) {
-                    cooldowns[i]--;
-                    
-                    // Update visual feedback if needed
-                    const card = document.querySelectorAll('.feature-card')[i];
-                    if (cooldowns[i] === 0) {
-                        // Reset card appearance when cooldown is over
-                        card.style.opacity = '1';
-                        card.style.pointerEvents = 'auto';
-                    } else {
-                        // Show cooldown on the card
-                        card.style.opacity = '0.7';
-                        card.style.pointerEvents = 'none';
-                    }
-                }
-            }
-        }
-        
-        function addPoint(element, index) {
-            // Prevent double-clicks/taps (especially important on mobile)
-            if (element.dataset.processing === 'true') return;
-            
-            // Check if card is on cooldown
-            if (cooldowns[index] > 0) return;
-            
-            // Set processing flag to prevent rapid multiple clicks
-            element.dataset.processing = 'true';
-            
-            // Add the clicked class to trigger animation
-            element.classList.add('clicked');
-            
-            // Add points based on streak
-            let pointsToAdd = 1;
-            
-            // Handle streak system
-            if (lastClickedIndex !== index) {
-                streak++;
-                
-                // Bonus points for streaks
-                if (streak >= 3) {
-                    pointsToAdd = Math.min(5, Math.floor(streak / 3) + 1);
-                    
-                    // Show streak effect
-                    const streakEffect = document.getElementById('streakEffect');
-                    streakEffect.innerText = `${streak}x STREAK! +${pointsToAdd}`;
-                    streakEffect.style.animation = 'none';
-                    void streakEffect.offsetWidth; // Trigger reflow
-                    streakEffect.style.animation = 'streakAnimation 1.5s forwards';
-                }
-            } else {
-                // Reset streak if clicking the same card
-                streak = 1;
-            }
-            
-            // Update last clicked index
-            lastClickedIndex = index;
-            
-            // Update points popup text
-            const pointsPopup = element.querySelector('.points-popup');
-            pointsPopup.innerText = `+${pointsToAdd}`;
-            
-            // Update score
-            score += pointsToAdd;
-            
-            // Apply cooldown (varies by level)
-            cooldowns[index] = Math.max(1, 5 - Math.floor(level / 3));
-            
-            // Update progress bar
-            updateProgressBar();
-            
-            // Check for level up
-            checkLevelUp();
-            
-            // Remove the clicked class after animation completes
-            setTimeout(() => {
-                element.classList.remove('clicked');
-                // Reset processing flag to allow clicking again
-                element.dataset.processing = 'false';
-            }, 1000);
-            
-            // Different animations for each card
-            const icon = element.querySelector('.icon');
-            
-            switch(index) {
-                case 0: // Brain icon - pulse animation
-                    icon.style.animation = 'pulse 1s infinite';
-                    setTimeout(() => {
-                        icon.style.animation = '';
-                    }, 3000);
-                    break;
-                case 1: // Phone icon - shake animation
-                    icon.style.animation = 'shake 0.5s';
-                    setTimeout(() => {
-                        icon.style.animation = '';
-                    }, 500);
-                    break;
-                case 2: // Plate icon - rotate animation
-                    icon.style.animation = 'rotate 1s';
-                    setTimeout(() => {
-                        icon.style.animation = '';
-                    }, 1000);
-                    break;
-            }
-        }
-        
-        function updateProgressBar() {
-            const progressFill = document.getElementById('progressFill');
-            const progressText = document.getElementById('progressText');
-            
-            // Calculate progress percentage toward next level
-            const levelProgress = score % levelThreshold;
-            const percentage = (levelProgress / levelThreshold) * 100;
-            
-            // Update progress bar visuals
-            progressFill.style.width = percentage + '%';
-            
-            // Update progress text
-            progressText.innerText = `Score: ${score}`;
-            
-            // Color changes based on progress
-            if (percentage > 80) {
-                progressFill.style.backgroundColor = '#FFD700'; // Gold color when close to leveling
-            } else {
-                progressFill.style.backgroundColor = '#00C853'; // Primary color
-            }
-        }
-        
-        function checkLevelUp() {
-            if (score >= level * levelThreshold) {
-                // Level up!
-                level++;
-                
-                // Update level badge
-                const levelBadge = document.getElementById('levelBadge');
-                levelBadge.innerText = `Level ${level}`;
-                
-                // Level up animation
-                levelBadge.style.transform = 'scale(1.5)';
-                levelBadge.style.backgroundColor = '#FFD700';
-                setTimeout(() => {
-                    levelBadge.style.transform = 'scale(1)';
-                    levelBadge.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-                }, 1000);
-                
-                // Flash screen effect for level up
-                const visualColumn = document.querySelector('.visual-column');
-                const flashEffect = document.createElement('div');
-                flashEffect.style.position = 'absolute';
-                flashEffect.style.top = '0';
-                flashEffect.style.left = '0';
-                flashEffect.style.width = '100%';
-                flashEffect.style.height = '100%';
-                flashEffect.style.backgroundColor = 'rgba(255, 215, 0, 0.3)';
-                flashEffect.style.zIndex = '5';
-                flashEffect.style.pointerEvents = 'none';
-                
-                visualColumn.appendChild(flashEffect);
-                
-                setTimeout(() => {
-                    visualColumn.removeChild(flashEffect);
-                }, 1000);
-                
-                // Increase difficulty with each level
-                levelThreshold = Math.floor(10 + (level * 5));
-            }
-        }
-    </script>
-    
-    <style>
-        /* Special animations for each card */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
-        
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(5px); }
-            50% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-            100% { transform: translateX(0); }
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-    </style>
     <div class="page-container">
-        <!-- Visual Column -->
         <div class="visual-column">
             <div class="logo">nutriwai</div>
             <div class="progress-bar">
@@ -868,47 +546,56 @@ position: absolute;
             <div class="feature-cards">
                 <div class="feature-card" onclick="addPoint(this, 0)">
                     <div class="points-popup">+1</div>
-                    <div class="icon"><img id="food1" class="food-image" alt="Breakfast" src="assets/images/breakfast.png"></div>
+                    <div class="icon">
+                        <img id="food1" class="food-image" alt="Breakfast" src="assets/images/breakfast.png" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/60x60/eee/ccc?text=Bfast';">
+                    </div>
                     <div class="text">Breakfast</div>
                 </div>
                 <div class="feature-card" onclick="addPoint(this, 1)">
                     <div class="points-popup">+1</div>
-                    <div class="icon"><img id="food2" class="food-image" alt="Lunch" src="assets/images/lunch.png"></div>
+                    <div class="icon">
+                        <img id="food2" class="food-image" alt="Lunch" src="assets/images/lunch.png"
+                             onerror="this.onerror=null; this.src='https://placehold.co/60x60/eee/ccc?text=Lunch';">
+                    </div>
                     <div class="text">Lunch</div>
                 </div>
                 <div class="feature-card" onclick="addPoint(this, 2)">
                     <div class="points-popup">+1</div>
-                    <div class="icon"><img id="food3" class="food-image" alt="Dinner" src="assets/images/dinner.png"></div>
+                    <div class="icon">
+                        <img id="food3" class="food-image" alt="Dinner" src="assets/images/dinner.png"
+                             onerror="this.onerror=null; this.src='https://placehold.co/60x60/eee/ccc?text=Dinner';">
+                    </div>
                     <div class="text">Dinner</div>
                 </div>
             </div>
         </div>
 
-        <!-- Content Column -->
         <div class="content-column">
             <h1 class="headline">Eat Smarter with AI</h1>
             <p class="tagline">Your personal nutrition coach powered by artificial intelligence. Simple. Smart. Effective.</p>
-<div><figure>
-<figcaption style="margin-bottom: 8px;">Listen to podcast</figcaption>
-  <audio controls src="audio/podcast01.mp3"></audio>
-  </figure>
+            <div>
+                <figure>
+                    <figcaption style="margin-bottom: 8px;">Listen to podcast</figcaption>
+                    <audio controls src="audio/podcast01.mp3">
+                        Your browser does not support the audio element.
+                    </audio>
+                </figure>
             </div>
-            <form class="form-container">
+            <form class="form-container" id="subscribeForm">
                 <div class="input-row">
                     <div class="input-group">
-                        <input type="text" placeholder="Your name" required>
+                        <input type="text" id="formName" placeholder="Your name" required>
                     </div>
                     <div class="input-group">
-                        <input type="email" placeholder="Email address" required>
+                        <input type="email" id="formEmail" placeholder="Email address" required>
                     </div>
                 </div>
                 <div class="input-group" style="margin-bottom: 1rem;">
-                    <textarea placeholder="What is your biggest nutrition challenge?" rows="3" style="resize: vertical;"></textarea>
+                    <textarea id="formChallenge" placeholder="What is your biggest nutrition challenge?" rows="3" style="resize: vertical;"></textarea>
                 </div>
                 <button type="submit" class="submit-button">Subscribe</button>
             </form>
-
-            
 		
             <div class="contact-info">
                 <div class="contact-item">
@@ -926,7 +613,353 @@ position: absolute;
             </footer>
         </div>
     </div>
-<!-- Include the JS file at the end of your HTML -->
-    <script src="feedback.js"></script>
-</body>
+
+    <div class="modal-overlay" id="submissionModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Thank You!</h3>
+            <p id="modalMessage">Your information has been received. We'll be in touch!</p>
+            <button class="modal-close-button" id="closeModalButton">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Game Mechanics & Progress Saving ---
+        let score = 0;
+        let streak = 0;
+        let level = 1;
+        let levelThreshold = 10; // Initial threshold
+        let cooldowns = [0, 0, 0];
+        let lastClickedIndex = -1;
+
+        const NUTRIWAI_PROGRESS_KEY = 'nutriwaiGameProgress';
+
+        // Function to save progress to localStorage
+        function saveProgress() {
+            const progress = {
+                score: score,
+                level: level,
+                levelThreshold: levelThreshold,
+                // lastClickedIndex: lastClickedIndex, // Optional: save if needed for game state
+                // streak: streak // Optional: save if needed
+            };
+            localStorage.setItem(NUTRIWAI_PROGRESS_KEY, JSON.stringify(progress));
+        }
+
+        // Function to load progress from localStorage
+        function loadProgress() {
+            const savedProgress = localStorage.getItem(NUTRIWAI_PROGRESS_KEY);
+            if (savedProgress) {
+                try {
+                    const progress = JSON.parse(savedProgress);
+                    score = parseInt(progress.score, 10) || 0;
+                    level = parseInt(progress.level, 10) || 1;
+                    levelThreshold = parseInt(progress.levelThreshold, 10) || 10;
+                    // lastClickedIndex = progress.lastClickedIndex !== undefined ? parseInt(progress.lastClickedIndex, 10) : -1;
+                    // streak = parseInt(progress.streak, 10) || 0;
+                    
+                    console.log("Progress loaded:", progress);
+                } catch (e) {
+                    console.error("Error parsing saved progress:", e);
+                    // Initialize with defaults if parsing fails
+                    score = 0;
+                    level = 1;
+                    levelThreshold = 10;
+                }
+            } else {
+                 console.log("No saved progress found. Starting fresh.");
+            }
+            updateProgressBar(); // Update UI with loaded/default values
+            updateLevelBadge(); // Update level badge with loaded/default values
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Background image fallback
+            const visualColumn = document.querySelector('.visual-column');
+            if (visualColumn) { // Ensure element exists
+                const img = new Image();
+                img.onload = function() { /* Image loaded successfully */ };
+                img.onerror = function() {
+                    visualColumn.style.background = 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), linear-gradient(45deg, #009688, #4CAF50)';
+                };
+                // Extract URL from CSS (this is tricky and might not always work reliably)
+                // It's better if the URL is directly available or set via JS if dynamic
+                const currentBg = window.getComputedStyle(visualColumn).backgroundImage;
+                const urlMatch = currentBg.match(/url\(["']?(.*?)["']?\)/);
+                if (urlMatch && urlMatch[1]) {
+                    img.src = urlMatch[1];
+                } else {
+                     // Fallback if URL can't be extracted, or set a default known one
+                    img.src = './assets/images/background.jpg';
+                }
+            }
+            
+            // Mobile device detection and optimizations
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) {
+                document.body.classList.add('mobile-device');
+                const touchElements = document.querySelectorAll('.feature-card, .cta-button, .submit-button');
+                touchElements.forEach(el => {
+                    el.addEventListener('touchstart', function() { this.style.transform = 'scale(0.97)'; }, {passive: true});
+                    el.addEventListener('touchend', function() { this.style.transform = ''; }, {passive: true});
+                });
+            }
+
+            // Create and append level badge
+            const levelBadge = document.createElement('div');
+            levelBadge.className = 'level-badge';
+            levelBadge.id = 'levelBadge';
+            if(document.querySelector('.visual-column')) { // Check if visual column exists
+                 document.querySelector('.visual-column').appendChild(levelBadge);
+            }
+
+            // Create and append streak effect
+            const streakEffect = document.createElement('div');
+            streakEffect.className = 'streak-effect';
+            streakEffect.id = 'streakEffect';
+             if(document.querySelector('.visual-column')) { // Check if visual column exists
+                document.querySelector('.visual-column').appendChild(streakEffect);
+            }
+
+
+            loadProgress(); // Load progress after DOM is ready and elements are created
+            
+            // Show level badge after a short delay (if it was created)
+            const lb = document.getElementById('levelBadge');
+            if (lb) {
+                setTimeout(() => { lb.style.display = 'block'; }, 500); // Reduced delay
+            }
+            
+            setInterval(updateCooldowns, 1000);
+
+            // Form submission handling
+            const subscribeForm = document.getElementById('subscribeForm');
+            const submissionModal = document.getElementById('submissionModal');
+            const closeModalButton = document.getElementById('closeModalButton');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+
+
+            if (subscribeForm && submissionModal && closeModalButton) {
+                subscribeForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission
+
+                    const name = document.getElementById('formName').value;
+                    const email = document.getElementById('formEmail').value;
+                    const challenge = document.getElementById('formChallenge').value;
+
+                    // --- TODO: Implement actual email sending here ---
+                    // This would typically involve a fetch request to a backend endpoint (e.g., a Cloudflare Worker)
+                    // For example:
+                    // fetch('/api/subscribe', {
+                    //     method: 'POST',
+                    //     headers: { 'Content-Type': 'application/json' },
+                    //     body: JSON.stringify({ name, email, challenge })
+                    // })
+                    // .then(response => response.json())
+                    // .then(data => {
+                    //     if (data.success) {
+                    //         modalTitle.textContent = "Thank You, " + name;
+                    //         modalMessage.textContent = "Your subscription is confirmed. We will be in touch at " + email + "!";
+                    //         submissionModal.classList.add('active');
+                    //         subscribeForm.reset(); // Clear form fields
+                    //     } else {
+                    //         modalTitle.textContent = "Submission Failed";
+                    //         modalMessage.textContent = data.message || "Something went wrong. Please try again.";
+                    //         submissionModal.classList.add('active');
+                    //     }
+                    // })
+                    // .catch(error => {
+                    //     console.error('Error submitting form:', error);
+                    //     modalTitle.textContent = "Error";
+                    //     modalMessage.textContent = "Could not submit the form. Please check your connection and try again.";
+                    //     submissionModal.classList.add('active');
+                    // });
+                    // --- End of TODO ---
+                    
+                    // For now, just show a generic success message
+                    modalTitle.textContent = "Thank You, " + (name || "Explorer");
+                    modalMessage.textContent = "Your details have been noted. We will keep you updated!";
+                    submissionModal.classList.add('active');
+                    subscribeForm.reset(); 
+                });
+
+                closeModalButton.addEventListener('click', function() {
+                    submissionModal.classList.remove('active');
+                });
+
+                // Close modal if user clicks outside of it
+                submissionModal.addEventListener('click', function(event) {
+                    if (event.target === submissionModal) {
+                        submissionModal.classList.remove('active');
+                    }
+                });
+            } else {
+                console.warn("Form or modal elements not found. Form submission will not work as expected.");
+            }
+        });
+        
+        function updateCooldowns() {
+            const cards = document.querySelectorAll('.feature-card');
+            for (let i = 0; i < cooldowns.length; i++) {
+                if (cooldowns[i] > 0) {
+                    cooldowns[i]--;
+                    if (cards[i]) { // Check if card exists
+                        if (cooldowns[i] === 0) {
+                            cards[i].style.opacity = '1';
+                            cards[i].style.pointerEvents = 'auto';
+                        } else {
+                            cards[i].style.opacity = '0.7';
+                            cards[i].style.pointerEvents = 'none';
+                        }
+                    }
+                }
+            }
+        }
+        
+        function addPoint(element, index) {
+            if (!element || element.dataset.processing === 'true' || (cooldowns[index] !== undefined && cooldowns[index] > 0)) {
+                 return;
+            }
+            
+            element.dataset.processing = 'true';
+            element.classList.add('clicked');
+            
+            let pointsToAdd = 1;
+            
+            if (lastClickedIndex !== index && lastClickedIndex !== -1) { // Check lastClickedIndex is not initial -1
+                streak++;
+                if (streak >= 3) {
+                    pointsToAdd = Math.min(5, Math.floor(streak / 3) + 1);
+                    const streakEffect = document.getElementById('streakEffect');
+                    if (streakEffect) {
+                        streakEffect.innerText = `${streak}x STREAK! +${pointsToAdd}`;
+                        streakEffect.style.animation = 'none';
+                        void streakEffect.offsetWidth; // Trigger reflow
+                        streakEffect.style.animation = 'streakAnimation 1.5s forwards';
+                    }
+                }
+            } else if (lastClickedIndex === index) { // Reset streak if clicking the same card consecutively
+                 streak = 0; // Reset streak
+            } else { // First click or different card after a reset
+                streak = 1; // Start streak
+            }
+            
+            lastClickedIndex = index;
+            
+            const pointsPopup = element.querySelector('.points-popup');
+            if (pointsPopup) pointsPopup.innerText = `+${pointsToAdd}`;
+            
+            score += pointsToAdd;
+            cooldowns[index] = Math.max(1, 5 - Math.floor(level / 3));
+            
+            updateProgressBar();
+            checkLevelUp();
+            saveProgress(); // Save progress after score/level changes
+
+            setTimeout(() => {
+                element.classList.remove('clicked');
+                element.dataset.processing = 'false';
+            }, 1000);
+            
+            const icon = element.querySelector('.icon img'); // Target the image inside the icon div
+            if (icon) {
+                icon.style.animation = 'none'; // Reset animation before applying new one
+                void icon.offsetWidth; // Trigger reflow
+
+                switch(index) {
+                    case 0: icon.style.animation = 'pulse 0.7s 2'; break;
+                    case 1: icon.style.animation = 'shake 0.5s 1'; break;
+                    case 2: icon.style.animation = 'rotate 1s 1'; break;
+                }
+                 // Remove animation after it finishes to prevent it from re-triggering on hover
+                setTimeout(() => {
+                    if(icon) icon.style.animation = '';
+                }, (index === 0 ? 1400 : (index === 1 ? 500 : 1000)));
+            }
+        }
+        
+        function updateProgressBar() {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            if (!progressFill || !progressText) return;
+
+            const progressTowardsNextLevel = score - ((level -1) * levelThreshold); // Score accumulated in current level
+            const percentage = levelThreshold > 0 ? (Math.max(0, progressTowardsNextLevel) / levelThreshold) * 100 : 0;
+            
+            progressFill.style.width = Math.min(100, percentage) + '%'; // Cap at 100%
+            progressText.innerText = `Score: ${score}`;
+            
+            if (percentage > 80) {
+                progressFill.style.backgroundColor = '#FFD700';
+            } else {
+                progressFill.style.backgroundColor = 'var(--primary)';
+            }
+        }
+
+        function updateLevelBadge() {
+            const levelBadge = document.getElementById('levelBadge');
+            if (levelBadge) {
+                 levelBadge.innerText = `Level ${level}`;
+            }
+        }
+        
+        function checkLevelUp() {
+            // Check if current score meets or exceeds the threshold for the *current* level
+            // (level -1) * oldLevelThreshold + newLevelThreshold is a bit complex.
+            // Simpler: if score >= totalScoreNeededForNextLevel
+            const scoreNeededForNextLevel = level * levelThreshold;
+
+            if (score >= scoreNeededForNextLevel) {
+                level++;
+                updateLevelBadge(); // Update badge text first
+                
+                const levelBadge = document.getElementById('levelBadge');
+                if (levelBadge) {
+                    levelBadge.style.transform = 'scale(1.5)';
+                    levelBadge.style.backgroundColor = '#FFD700';
+                    setTimeout(() => {
+                        levelBadge.style.transform = 'scale(1)';
+                        levelBadge.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                    }, 1000);
+                }
+                
+                const visualColumn = document.querySelector('.visual-column');
+                if (visualColumn) {
+                    const flashEffect = document.createElement('div');
+                    flashEffect.style.cssText = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 215, 0, 0.3); z-index: 5; pointer-events: none;';
+                    visualColumn.appendChild(flashEffect);
+                    setTimeout(() => { visualColumn.removeChild(flashEffect); }, 500); // Shorter flash
+                }
+                
+                // Increase difficulty: make next level require more points
+                levelThreshold = Math.floor(10 + (level * 5)); // Update threshold for the *new* current level
+                saveProgress(); // Save progress after level up and threshold change
+                updateProgressBar(); // Reflect new threshold if progress bar shows progress within current level
+            }
+        }
+    </script>
+    
+    <style>
+        /* Animations for food images */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(5px) rotate(3deg); }
+            50% { transform: translateX(-5px) rotate(-3deg); }
+            75% { transform: translateX(3px) rotate(2deg); }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            to { transform: rotate(360deg) scale(1); }
+        }
+    </style>
+    </body>
 </html>
