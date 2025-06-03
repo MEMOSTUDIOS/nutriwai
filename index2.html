@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#00c853">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <title>Nutriwai - Eat Smarter with AI</title>
+    <meta name="description" content="Your personal nutrition coach powered by artificial intelligence. Simple. Smart. Effective.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        :root {
+            --primary: #00c853;
+            --primary-dark: #00B248;
+            --dark: #222;
+            --light: #FCFCFC;
+            --danger: #f44336; /* Red for incorrect choices */
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+        }
+
+        body {
+            color: var(--dark);
+            overflow-x: hidden;
+            background-color: black; 
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        html {
+            touch-action: manipulation; 
+        }
+        
+        body.mobile-device .feature-card:hover {
+            transform: none; 
+        }
+        
+        body.mobile-device .feature-card:active {
+            transform: translateY(-5px); 
+        }
+
+        .page-container {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .visual-column {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                        url('./assets/images/background.jpg') center/cover;
+            display: flex;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+        }
+        a {color: #00662B;} 
+
+        .logo {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            z-index: 10;
+        }
+
+        .feature-cards {
+            display: flex;
+            justify-content: center;
+            gap: 1rem; /* Slightly reduced gap */
+            flex-wrap: wrap; 
+            margin-top: 1rem; 
+            width: 100%;
+            max-width: 450px; /* Max width for the cards container */
+position: absolute;
+bottom: 30px;
+        }
+
+        .feature-card {
+            width: 120px; /* Adjusted size */
+            height: 150px; /* Adjusted size */
+            border-radius: 25px; /* Adjusted border radius */
+            background-color: rgba(255, 255, 255, 0.925);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem; /* Adjusted padding */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+            transition: var(--transition);
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            border: 3px solid transparent; /* For feedback */
+        }
+        .feature-card.correct {
+            border-color: var(--primary);
+            animation: pulseFeedback 0.5s ease;
+        }
+        .feature-card.incorrect {
+            border-color: var(--danger);
+            animation: shakeFeedback 0.5s ease;
+        }
+
+        @keyframes pulseFeedback {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes shakeFeedback {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
+
+        .feature-card:before { /* Hover effect - can be kept or removed based on preference */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 0;
+            background-color: var(--primary);
+            opacity: 0.1;
+            transition: height 0.3s ease;
+            z-index: 0;
+        }
+
+        .feature-card:hover:before {
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card .icon {
+            font-size: 3rem; /* Increased for emoji visibility */
+            margin-bottom: 0.5rem; /* Adjusted margin */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 2;
+            line-height: 1; /* Ensure emoji is centered well */
+        }
+
+        .feature-card:hover .icon {
+            transform: scale(1.1); 
+        }
+
+        .feature-card .text {
+            font-size: 0.85rem; /* Slightly larger text */
+            font-weight: 600;
+            text-align: center;
+            color: var(--dark);
+            position: relative;
+            z-index: 2;
+            line-height: 1.2;
+        }
+
+        .points-popup {
+            position: absolute;
+            /* background-color: var(--primary); // Color will be set by JS */
+            color: white;
+            border-radius: 50%;
+            width: 45px; /* Slightly larger */
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            z-index: 3;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .feature-card.clicked .points-popup {
+            animation: pointsAnimation 1.2s forwards;
+        }
+
+        @keyframes pointsAnimation {
+            0% { opacity: 0; transform: translateY(20px) scale(0.8); }
+            20% { opacity: 1; transform: translateY(-25px) scale(1.1); } /* Pop up higher */
+            80% { opacity: 1; transform: translateY(-45px) scale(1); }
+            100% { opacity: 0; transform: translateY(-65px) scale(0.8); }
+        }
+
+        .progress-bar {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            width: 180px; /* Slightly wider */
+            height: 30px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            margin-bottom: 1rem; 
+            position: relative; /* For progress-text positioning */
+        }
+        
+        .progress-fill {
+            background-color: var(--primary);
+            border-radius: 20px; 
+            height: 20px; 
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            position: absolute;
+            left:0; right:0; /* Center text within progress bar */
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        /* .food-image class removed as we are using text/emoji for icons */
+
+        .level-badge {
+            position: absolute;
+            top: 2rem;     
+            right: 2rem;    
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 5px 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--dark);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none; 
+            z-index: 10; 
+        }
+
+        .streak-effect {
+            position: absolute;
+            top: 60px; /* Adjusted position */
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto; 
+            padding: 8px 15px; /* Increased padding */
+            text-align: center;
+            font-size: 1.3rem; /* Slightly larger */
+            font-weight: bold;
+            color: gold;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+            background-color: rgba(0,0,0,0.4);
+            border-radius: 10px;
+        }
+
+        @keyframes streakAnimation { /* Kept similar, might adjust timing if needed */
+            0% { opacity: 0; transform: translate(-50%, 0) scale(0.8); }
+            20% { opacity: 1; transform: translate(-50%, -20px) scale(1.1); }
+            80% { opacity: 1; transform: translate(-50%, -30px) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -40px) scale(0.8); }
+        }
+
+        .game-share-buttons-container {
+            display: flex;
+            flex-direction: row; 
+            gap: 0.75rem;
+            z-index: 5; 
+            margin-top: 1rem;    
+            margin-bottom: 1rem; 
+        }
+
+        .game-share-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2); color: white; 
+            text-decoration: none; transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.3);
+        }
+        .game-share-icon svg { width: 18px; height: 18px; fill: currentColor; }
+        .game-share-icon:hover { transform: scale(1.1); box-shadow: 0 4px 8px rgba(0,0,0,0.3); background-color: rgba(255, 255, 255, 0.3); }
+        .game-share-icon.facebook:hover { background-color: #1877F2; border-color: #1877F2;}
+        .game-share-icon.instagram:hover { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%); border:none;}
+        .game-share-icon.linkedin:hover { background-color: #0A66C2; border-color: #0A66C2;}
+        .game-share-icon.whatsapp:hover { background-color: #25D366; border-color: #25D366;}
+
+        .content-column { /* Styles for right column remain largely unchanged */
+            background-color: white; display: flex; flex-direction: column;
+            justify-content: center; padding: 4rem; position: relative;
+        }
+        .headline { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: var(--dark); letter-spacing: -1px; }
+        .tagline { font-size: 1.5rem; color: #555; margin-bottom: 2rem; max-width: 650px; }
+        .cta-button { display: inline-block; background-color: var(--primary); color: white; text-decoration: none;
+            padding: 1rem 2rem; border-radius: 50px; font-weight: 600; font-size: 1rem;
+            transition: var(--transition); margin-bottom: 3rem; box-shadow: 0 10px 25px rgba(0, 200, 83, 0.3); width: fit-content;
+        }
+        .cta-button:hover { background-color: var(--primary-dark); transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0, 200, 83, 0.4); }
+        .contact-info { margin-top: auto; border-top: 1px solid #eee; padding-top: 2rem; display: flex; gap: 2rem; flex-wrap: wrap; }
+        .contact-item { font-size: 0.9rem; color: #666; }
+        .contact-item strong { display: block; margin-bottom: 0.3rem; color: var(--dark); font-weight: 600; }
+        .form-container { max-width: 400px; margin-top: 1rem; margin-bottom: 2rem; }
+        .input-row { display: flex; gap: 1rem; margin-bottom: 1rem; }
+        .input-group { flex: 1; }
+        .input-group input, .input-group textarea { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--primary); 
+            border-radius: 8px; font-size: 1rem; transition: var(--transition); }
+        .input-group input:focus, .input-group textarea:focus { outline: none; border-color: var(--primary-dark); box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.2); }
+        .submit-button { background-color: #00662B; color: white; border: none; padding: 0.75rem 1.5rem; font-size: 1.1rem; 
+            font-weight: 600; letter-spacing: 0.5px; border-radius: 50px; cursor: pointer; transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 102, 43, 0.2); 
+        }
+        .submit-button:hover { background-color: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 178, 72, 0.3); }
+        footer { position: absolute; bottom: 1.5rem; right: 2rem; font-size: 0.8rem; color: #999; }
+
+        .modal-overlay { /* Modal styles remain largely unchanged */
+            position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;z-index:1000;opacity:0;visibility:hidden;transition:opacity .3s ease,visibility 0s .3s linear
+        }
+        .modal-overlay.active{opacity:1;visibility:visible;transition:opacity .3s ease}
+        .modal-content{background-color:#fff;padding:1.5rem;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.2);text-align:center;max-width:90%;width:380px;transform:scale(.9);transition:transform .3s ease}
+        .modal-overlay.active .modal-content{transform:scale(1)}
+        .modal-content h3,.nickname-modal-content h4{color:var(--primary);margin-bottom:1rem;font-size:1.4rem}
+        .modal-content p,.nickname-modal-content p{margin-bottom:1rem;color:#555;font-size:.95rem}
+        .modal-close-button,.nickname-modal-content button{background-color:var(--primary);color:#fff;border:none;padding:.6rem 1.2rem;border-radius:25px;font-weight:600;cursor:pointer;transition:background-color .3s ease;margin:.25rem}
+        .modal-close-button:hover,.nickname-modal-content button:hover{background-color:var(--primary-dark)}
+        .nickname-modal-content input[type=text]{width:calc(100% - 2rem);padding:.6rem 1rem;border:1px solid #ccc;border-radius:8px;font-size:1rem;margin-bottom:1rem}
+        .nickname-modal-content .cancel-share-button{background-color:#777}
+        .nickname-modal-content .cancel-share-button:hover{background-color:#555}
+        .share-message-preview{font-size:.9em;margin:10px 0 15px;color:#333;background-color:#f9f9f9;padding:10px;border-radius:5px;border:1px solid #eee;word-wrap:break-word}
+        .clipboard-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background-color:var(--dark);color:#fff;padding:10px 20px;border-radius:25px;z-index:2000;opacity:0;transition:opacity .5s ease;pointer-events:none}
+        .clipboard-toast.show{opacity:1}
+
+        /* Responsive */
+        @media (max-width: 1024px) { /* Responsive styles remain largely unchanged but check for consistency */
+            .page-container { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+            .visual-column { min-height: auto; /* Let content define height */ padding-bottom: 4rem; /* Ensure space for elements */ order: 1; }
+            .content-column { order: 2; padding: 3rem 2rem; }
+            .headline { font-size: 2.5rem; }
+            .feature-cards { position: relative; margin-top: 20rem; padding-bottom: 1rem; max-width: 400px; /* Adjust max width on smaller screens */ }
+            .feature-card { width: 100px; height: 130px; } /* Smaller cards for tablet */
+            .feature-card .icon { font-size: 2.5rem; }
+            .logo { top: 1.5rem; left: 1.5rem; }
+            .progress-bar { margin-top: 1rem; margin-bottom: 1rem; width: 160px; } /* Adjusted width */
+            .level-badge { top: 1.5rem; right: 1.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .level-badge { top: 1.5rem; right: 1.5rem; left: auto; }
+            .feature-cards { gap: 0.8rem; max-width: 340px; }
+            .feature-card { width: 90px; height: 120px; padding: 0.6rem; }
+             .feature-card .icon { font-size: 2.2rem; }
+             .feature-card .text { font-size: 0.75rem; }
+            .contact-info { flex-direction: column; gap: 1rem; }
+            .input-row { flex-direction: column; }
+            .progress-bar { position: static; margin-top: 1rem; width: 150px; }
+            .headline { font-size: 2.2rem; }
+            .tagline { font-size: 1.1rem; margin-bottom: 1rem; } 
+            .cta-button { padding: 0.9rem 1.8rem; margin-bottom: 2rem; font-size: 0.95rem; }
+            footer { position: relative; text-align: center; margin-top: 2rem; padding: 1rem 0; border-top: 1px solid #eee; width: 100%; bottom: auto; right: auto;}
+        }
+        
+        @media (max-width: 480px) {
+            .visual-column { padding: 1.5rem 1rem; }
+            .content-column { padding: 2rem 1.5rem; }
+            .logo { font-size: 1.3rem; top: 1rem; left: 1rem; }
+            .game-share-buttons-container { gap: 0.5rem; }
+            .game-share-icon { width: 32px; height: 32px; }
+            .game-share-icon svg { width: 16px; height: 16px; }
+            .level-badge { top: 1rem; right: 1rem; left: auto; font-size: 0.7rem; padding: 4px 8px; }
+            .headline { font-size: 1.9rem; margin-bottom: 1rem; }
+            .tagline { font-size: 1rem; margin-bottom: 1rem; } 
+            .cta-button { padding: 0.8rem 1.5rem; font-size: 0.9rem; margin-bottom: 1.5rem; width: 100%; text-align: center; }
+            .feature-cards { gap: 0.5rem; margin-top: 10rem; max-width: 100%; }
+            .feature-card { width: calc(33.33% - 0.5rem); height: 110px; padding: 0.5rem; } /* Ensure 3 cards fit */
+            .feature-card .icon { font-size: 2rem; margin-bottom: 0.3rem; }
+            .feature-card .text { font-size: 0.7rem; }
+            .progress-bar { width: 120px; height: 25px; margin-top: 0.8rem; margin-bottom: 0.8rem; }
+            .progress-fill { height: 15px; }
+            .progress-text { font-size: 0.7rem; }
+            .points-popup { width: 35px; height: 35px; font-size: 0.8rem;}
+        }
+        
+        @media (max-width: 768px) {
+            .feature-card, .cta-button, .submit-button, .game-share-icon { 
+                cursor: pointer; -webkit-tap-highlight-color: transparent;
+            }
+            input, textarea, button { font-size: 16px !important; }
+            body { -webkit-overflow-scrolling: touch; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="visual-column">
+            <div class="logo">nutriwai</div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+                <div class="progress-text" id="progressText">Score: 0</div>
+            </div>
+
+            <div class="game-share-buttons-container">
+                <a href="#" class="game-share-icon facebook" data-service="facebook" title="Share on Facebook">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C18.34 21.21 22 17.06 22 12.06C22 6.53 17.5 2.04 12 2.04Z"/></svg>
+                </a>
+                <a href="#" class="game-share-icon instagram" data-service="instagram" title="Share on Instagram">
+                    <svg viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>
+                </a>
+                <a href="#" class="game-share-icon linkedin" data-service="linkedin" title="Share on LinkedIn">
+                    <svg viewBox="0 0 24 24"><path d="M19 3A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H19M18.5 18.5V13.2A3.26 3.26 0 0 0 15.24 9.94C14.39 9.94 13.4 10.46 12.92 11.24V10.13H10.13V18.5H12.92V13.57C12.92 12.8 13.54 12.17 14.31 12.17A1.4 1.4 0 0 1 15.71 13.57V18.5H18.5M6.88 8.56A1.68 1.68 0 0 0 8.56 6.88C8.56 5.95 7.81 5.19 6.88 5.19A1.69 1.69 0 0 0 5.19 6.88C5.19 7.81 5.95 8.56 6.88 8.56M8.27 18.5V10.13H5.5V18.5H8.27Z"/></svg>
+                </a>
+                <a href="#" class="game-share-icon whatsapp" data-service="whatsapp" title="Share on WhatsApp">
+                    <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 12C2.13 13.85 2.61 15.62 3.4 17.19L2 22L7 20.62C8.53 21.35 10.24 21.76 12.04 21.76C17.5 21.76 21.95 17.31 21.95 11.76C21.95 6.21 17.5 2 12.04 2M12.04 3.64C16.57 3.64 20.27 7.34 20.27 11.87C20.27 16.4 16.57 20.1 12.04 20.1C10.44 20.1 8.96 19.65 7.72 18.89L7.23 18.59L4.41 19.31L5.15 16.58L4.84 16.09C3.96 14.71 3.55 13.09 3.55 11.37C3.55 7.34 7.25 3.64 12.04 3.64M16.95 14.3C16.71 14.23 15.53 13.68 15.31 13.59C15.08 13.51 14.92 13.46 14.75 13.71C14.58 13.95 14.06 14.54 13.88 14.71C13.71 14.88 13.54 14.92 13.3 14.84C13.06 14.75 12.17 14.45 11.12 13.54C10.31 12.83 9.77 11.95 9.6 11.7C9.43 11.46 9.55 11.34 9.68 11.21C9.8 11.09 9.96 10.89 10.12 10.73C10.28 10.56 10.32 10.44 10.44 10.2C10.56 9.96 10.48 9.77 10.4 9.6C10.32 9.43 9.84 8.26 9.64 7.78C9.45 7.3 9.25 7.34 9.12 7.33H8.78C8.61 7.33 8.33 7.38 8.08 7.62C7.84 7.86 7.25 8.41 7.25 9.53C7.25 10.66 8.13 11.74 8.25 11.91C8.38 12.08 9.77 14.34 12.04 15.23C12.64 15.49 13.06 15.62 13.39 15.73C13.95 15.91 14.42 15.86 14.75 15.82C15.12 15.78 16.02 15.27 16.22 14.79C16.41 14.3 16.41 13.92 16.34 13.83C16.27 13.74 16.14 13.7 15.95 13.62Z"/></svg>
+                </a>
+            </div>
+
+            <div class="feature-cards">
+                <div class="feature-card" id="foodCard0">
+                    <div class="points-popup"></div>
+                    <div class="icon"></div>
+                    <div class="text"></div>
+                </div>
+                <div class="feature-card" id="foodCard1">
+                    <div class="points-popup"></div>
+                    <div class="icon"></div>
+                    <div class="text"></div>
+                </div>
+                <div class="feature-card" id="foodCard2">
+                    <div class="points-popup"></div>
+                    <div class="icon"></div>
+                    <div class="text"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-column">
+            <h1 class="headline">Eat Smarter with AI</h1>
+            <p class="tagline">Your personal nutrition coach powered by artificial intelligence. Simple. Smart. Effective.</p>
+            
+            <div>
+                <figure>
+                    <figcaption style="margin-bottom: 8px;">Listen to podcast</figcaption>
+                    <audio controls src="audio/podcast01.mp3">
+                        Your browser does not support the audio element.
+                    </audio>
+                </figure>
+            </div>
+            <form class="form-container" id="subscribeForm">
+                <div class="input-row">
+                    <div class="input-group">
+                        <input type="text" id="formName" placeholder="Your name" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" id="formEmail" placeholder="Email address" required>
+                    </div>
+                </div>
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <textarea id="formChallenge" placeholder="What is your biggest nutrition challenge?" rows="3" style="resize: vertical;"></textarea>
+                </div>
+                <button type="submit" class="submit-button">Subscribe</button>
+            </form>
+		
+            <div class="contact-info">
+                <div class="contact-item">
+                    <strong>Email</strong>
+                    <a href="mailto:contact@nutriwai.com">contact@nutriwai.com</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Location</strong>
+                    Timisoara, Romania
+                </div>
+            </div>
+
+            <footer>
+                &copy; 2025 Nutriwai. All rights reserved.
+            </footer>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="submissionModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Thank You!</h3>
+            <p id="modalMessage">Your information has been received. We'll be in touch!</p>
+            <button class="modal-close-button" id="closeModalButton">Close</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="nicknameModal">
+        <div class="nickname-modal-content modal-content"> 
+            <h4>Share Your Progress!</h4>
+            <p>Enter a nickname (optional):</p>
+            <input type="text" id="shareNicknameInput" placeholder="Your Nickname">
+            <p class="share-message-preview" id="shareMessagePreview"></p>
+            <div style="margin-top:1rem;">
+                <button id="confirmShareButton">Confirm & Share</button>
+                <button id="skipShareButton">Skip & Share</button>
+                <button id="cancelShareButton" class="cancel-share-button">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="clipboard-toast" id="clipboardToast">Message copied to clipboard!</div>
+
+
+    <script>
+        let score = 0;
+        let streak = 0;
+        let level = 1;
+        let levelThreshold = 10; 
+        // Cooldowns removed as game is turn-based now
+
+        const NUTRIWAI_PROGRESS_KEY = 'nutriwaiGameProgress';
+
+        const foods = [
+            // Healthy Foods (10 examples)
+            { name: "Apple", icon: "🍎", type: "healthy" }, { name: "Broccoli", icon: "🥦", type: "healthy" },
+            { name: "Carrot", icon: "🥕", type: "healthy" }, { name: "Grapes", icon: "🍇", type: "healthy" },
+            { name: "Avocado", icon: "🥑", type: "healthy" }, { name: "Banana", icon: "🍌", type: "healthy" },
+            { name: "Strawberry", icon: "🍓", type: "healthy" }, { name: "Orange", icon: "🍊", type: "healthy" },
+            { name: "Kiwi", icon: "🥝", type: "healthy" }, // Changed from Blueberries
+            { name: "Bell Pepper", icon: "🌶️", type: "healthy" },
+            // Unhealthy Foods (10 examples)
+            { name: "Donut", icon: "🍩", type: "unhealthy" }, { name: "Fries", icon: "🍟", type: "unhealthy" },
+            { name: "Pizza", icon: "🍕", type: "unhealthy" }, { name: "Burger", icon: "🍔", type: "unhealthy" },
+            { name: "Hot Dog", icon: "🌭", type: "unhealthy" }, { name: "Ice Cream", icon: "🍦", type: "unhealthy" },
+            { name: "Chocolate", icon: "🍫", type: "unhealthy" }, { name: "Soda", icon: "🥤", type: "unhealthy" },
+            { name: "Cake", icon: "🍰", type: "unhealthy" }, { name: "Candy", icon: "🍬", type: "unhealthy" }
+        ];
+
+        const healthyFoods = foods.filter(f => f.type === 'healthy');
+        const unhealthyFoods = foods.filter(f => f.type === 'unhealthy');
+
+        const foodCards = [
+            document.getElementById('foodCard0'),
+            document.getElementById('foodCard1'),
+            document.getElementById('foodCard2')
+        ];
+
+        function saveProgress() {
+            const progress = { score, level, levelThreshold, streak }; // Save streak too
+            localStorage.setItem(NUTRIWAI_PROGRESS_KEY, JSON.stringify(progress));
+        }
+
+        function loadProgress() {
+            const savedProgress = localStorage.getItem(NUTRIWAI_PROGRESS_KEY);
+            if (savedProgress) {
+                try {
+                    const progress = JSON.parse(savedProgress);
+                    score = parseInt(progress.score, 10) || 0;
+                    level = parseInt(progress.level, 10) || 1;
+                    levelThreshold = parseInt(progress.levelThreshold, 10) || 10;
+                    streak = parseInt(progress.streak, 10) || 0;
+                } catch (e) {
+                    score = 0; level = 1; levelThreshold = 10; streak = 0;
+                }
+            }
+            updateProgressBar(); 
+            updateLevelBadge(); 
+        }
+
+        // Utility to shuffle an array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function setupNewRound() {
+            // Get one random healthy food
+            const randomHealthyFood = healthyFoods[Math.floor(Math.random() * healthyFoods.length)];
+
+            // Get two different random unhealthy foods
+            let randomUnhealthyFood1, randomUnhealthyFood2;
+            const unhealthyCopy = [...unhealthyFoods];
+            shuffleArray(unhealthyCopy);
+            randomUnhealthyFood1 = unhealthyCopy[0];
+            randomUnhealthyFood2 = unhealthyCopy[1];
+            
+            let currentChoices = [randomHealthyFood, randomUnhealthyFood1, randomUnhealthyFood2];
+            shuffleArray(currentChoices);
+
+            foodCards.forEach((card, index) => {
+                if (card) { // Ensure card element exists
+                    const foodItem = currentChoices[index];
+                    card.querySelector('.icon').textContent = foodItem.icon;
+                    card.querySelector('.text').textContent = foodItem.name;
+                    // Store food type directly on the element for easy access
+                    card.dataset.foodType = foodItem.type; 
+                    card.classList.remove('correct', 'incorrect', 'clicked'); // Reset feedback classes
+                    card.style.pointerEvents = 'auto'; // Ensure card is clickable
+                    card.onclick = () => handleFoodChoice(card, foodItem.type);
+                }
+            });
+        }
+        
+        let processingChoice = false; // Prevent multiple clicks during feedback
+
+        function handleFoodChoice(cardElement, foodType) {
+            if (processingChoice) return;
+            processingChoice = true;
+
+            cardElement.classList.add('clicked');
+            const pointsPopup = cardElement.querySelector('.points-popup');
+            let pointsChange = 0;
+
+            if (foodType === 'healthy') {
+                pointsChange = 5;
+                if (streak >= 2) { // Streak bonus starts from 3rd consecutive correct answer (streak is 0-indexed for calculation)
+                    pointsChange += Math.floor((streak + 1) / 3); // e.g. streak 2 (3rd correct) = +1 bonus
+                }
+                score += pointsChange;
+                streak++;
+                cardElement.classList.add('correct');
+                if(pointsPopup) pointsPopup.style.backgroundColor = 'var(--primary)';
+                if(pointsPopup) pointsPopup.innerText = `+${pointsChange}`;
+
+                // Streak effect
+                if (streak >= 3) {
+                    const streakEl = document.getElementById('streakEffect');
+                    if (streakEl) {
+                        streakEl.innerText = `${streak}x STREAK!`;
+                        streakEl.style.animation = 'none'; void streakEl.offsetWidth; 
+                        streakEl.style.animation = 'streakAnimation 1.5s forwards';
+                    }
+                }
+
+            } else { // Unhealthy choice
+                pointsChange = -10;
+                score = Math.max(0, score + pointsChange); // score doesn't go below 0
+                streak = 0; // Reset streak
+                cardElement.classList.add('incorrect');
+                if(pointsPopup) pointsPopup.style.backgroundColor = 'var(--danger)';
+                if(pointsPopup) pointsPopup.innerText = `${pointsChange}`;
+            }
+            
+            updateProgressBar();
+            checkLevelUp();
+            saveProgress();
+
+            // Disable other cards during feedback
+            foodCards.forEach(fc => {
+                if (fc !== cardElement) fc.style.pointerEvents = 'none';
+            });
+
+            setTimeout(() => {
+                cardElement.classList.remove('clicked', 'correct', 'incorrect');
+                setupNewRound(); // Load next round
+                processingChoice = false; 
+            }, 1500); // Delay before new round
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const visualColumn = document.querySelector('.visual-column');
+            if (visualColumn) { 
+                const img = new Image();
+                img.onerror = () => visualColumn.style.background = 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), linear-gradient(45deg, #009688, #4CAF50)';
+                const currentBg = window.getComputedStyle(visualColumn).backgroundImage;
+                const urlMatch = currentBg.match(/url\(["']?(.*?)["']?\)/);
+                img.src = urlMatch && urlMatch[1] ? urlMatch[1] : './assets/images/background.jpg';
+            }
+            
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) {
+                document.body.classList.add('mobile-device');
+                const touchElements = document.querySelectorAll('.feature-card, .cta-button, .submit-button, .game-share-icon');
+                touchElements.forEach(el => {
+                    el.addEventListener('touchstart', () => el.style.transform = 'scale(0.97)', {passive: true});
+                    el.addEventListener('touchend', () => el.style.transform = '', {passive: true});
+                });
+            }
+
+            const levelBadgeEl = document.createElement('div');
+            levelBadgeEl.className = 'level-badge';
+            levelBadgeEl.id = 'levelBadge';
+            if(visualColumn) visualColumn.appendChild(levelBadgeEl);
+
+            const streakEffectEl = document.createElement('div');
+            streakEffectEl.className = 'streak-effect';
+            streakEffectEl.id = 'streakEffect';
+            if(visualColumn) visualColumn.appendChild(streakEffectEl);
+
+            loadProgress(); 
+            setupNewRound(); // Initial setup of food choices
+            
+            if (document.getElementById('levelBadge')) {
+                setTimeout(() => { document.getElementById('levelBadge').style.display = 'block'; }, 500); 
+            }
+            
+            // Removed setInterval for updateCooldowns as it's not used
+
+            const subscribeForm = document.getElementById('subscribeForm');
+            const submissionModal = document.getElementById('submissionModal');
+            const closeModalButton = document.getElementById('closeModalButton');
+            if (subscribeForm && submissionModal && closeModalButton) {
+                subscribeForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); 
+                    const name = document.getElementById('formName').value;
+                    document.getElementById('modalTitle').textContent = "Thank You, " + (name || "Explorer") + "!";
+                    document.getElementById('modalMessage').textContent = "Your details have been noted. We'll keep you updated!";
+                    submissionModal.classList.add('active');
+                    subscribeForm.reset(); 
+                });
+                closeModalButton.addEventListener('click', () => submissionModal.classList.remove('active'));
+                submissionModal.addEventListener('click', e => e.target === submissionModal && submissionModal.classList.remove('active'));
+            }
+
+            const gameShareIcons = document.querySelectorAll('.game-share-icon');
+            const nicknameModal = document.getElementById('nicknameModal');
+            const shareNicknameInput = document.getElementById('shareNicknameInput');
+            const shareMessagePreview = document.getElementById('shareMessagePreview');
+            const confirmShareButton = document.getElementById('confirmShareButton');
+            const skipShareButton = document.getElementById('skipShareButton');
+            const cancelShareButton = document.getElementById('cancelShareButton');
+            const clipboardToast = document.getElementById('clipboardToast');
+            let currentShareService = null;
+
+            function updateSharePreview(nickname) {
+                const userIdentifier = nickname || "I";
+                shareMessagePreview.textContent = `${userIdentifier} reached level ${level} on Nutriwai! Learning to eat healthy every day. #Nutriwai #HealthyEating`;
+            }
+
+            gameShareIcons.forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    currentShareService = this.dataset.service;
+                    shareNicknameInput.value = ''; 
+                    updateSharePreview(''); 
+                    nicknameModal.classList.add('active');
+                });
+            });
+
+            if(shareNicknameInput) {
+                shareNicknameInput.addEventListener('input', function() {
+                    updateSharePreview(this.value);
+                });
+            }
+            
+            function proceedWithShare(service, nickname) {
+                const userIdentifier = nickname || "I";
+                const message = `${userIdentifier} reached level ${level} on Nutriwai! Learning to eat healthy every day. #Nutriwai #HealthyEating`;
+                const encodedMessage = encodeURIComponent(message);
+                const pageUrl = encodeURIComponent(window.location.href);
+                let shareUrl = '';
+
+                switch(service) {
+                    case 'facebook':
+                        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}&quote=${encodedMessage}`;
+                        break;
+                    case 'linkedin':
+                        shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${pageUrl}&title=${encodeURIComponent('My Nutriwai Progress!')}&summary=${encodedMessage}`;
+                        break;
+                    case 'whatsapp':
+                        shareUrl = `https://api.whatsapp.com/send?text=${encodedMessage}%20${pageUrl}`;
+                        break;
+                    case 'instagram':
+                        navigator.clipboard.writeText(message).then(() => {
+                            clipboardToast.textContent = "Message copied! Share on your Instagram.";
+                            clipboardToast.classList.add('show');
+                            setTimeout(() => clipboardToast.classList.remove('show'), 3000);
+                        }).catch(err => {
+                            console.error('Failed to copy text: ', err);
+                            clipboardToast.textContent = "Could not copy message.";
+                            clipboardToast.classList.add('show');
+                            setTimeout(() => clipboardToast.classList.remove('show'), 3000);
+                        });
+                        shareUrl = 'https://www.instagram.com/nutriwai/'; 
+                        break;
+                }
+                if (shareUrl) {
+                    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                }
+                nicknameModal.classList.remove('active');
+            }
+
+            if(confirmShareButton) confirmShareButton.addEventListener('click', () => proceedWithShare(currentShareService, shareNicknameInput.value.trim()));
+            if(skipShareButton) skipShareButton.addEventListener('click', () => proceedWithShare(currentShareService, ''));
+            if(cancelShareButton) cancelShareButton.addEventListener('click', () => nicknameModal.classList.remove('active'));
+            if(nicknameModal) nicknameModal.addEventListener('click', e => e.target === nicknameModal && nicknameModal.classList.remove('active'));
+        });
+        
+        // updateCooldowns function removed
+        
+        // addPoint function replaced by handleFoodChoice
+        
+        function updateProgressBar() {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            if (!progressFill || !progressText) return;
+            // Calculate progress towards current level's threshold.
+            // Score needed to reach current level *from the start* is (level-1)*previous_thresholds + current_level_threshold_points.
+            // It's simpler to think of progress within the current level's point requirement.
+            // Let's assume levelThreshold is the *additional* points needed for the *next* level up.
+            // So, if score is 25, level is 2, and threshold to reach level 3 is 20 (meaning 10 for L1, 15 for L2, 20 for L3 from start of L2)
+            // This logic needs to be robust.
+            // Let's define levelThreshold as the total score needed to *reach* the next level.
+            // So, if level 1 needs 10 points, level 2 needs 10+15=25 points, level 3 needs 25+20=45 points.
+            // The current `levelThreshold` variable seems to be the *additional* points for the current level.
+
+            const pointsIntoCurrentLevel = score - ( (level - 1) * (10 + (level-2)*5 + (level > 1 ? 5 : 0) ) ); // This is getting complex.
+                                                                                                // Let's simplify: levelThreshold is points needed *for this level*.
+            const scoreAtStartOfCurrentLevel = (level === 1) ? 0 : (10 + Array.from({length: level - 1}, (_, i) => (i+1)*5).reduce((a,b)=>a+b,0) - (level-1)*5 ); 
+            // Simplified: levelThreshold is the points needed to pass the current level
+            // Score needed to pass level 1: 10
+            // Score needed to pass level 2: 10 (for L1) + 15 (for L2) = 25 total score
+            // Score needed to pass level L: initial_L1_threshold + sum of (initial_L_threshold + (k-1)*5) for k=2 to L
+            
+            // Let's redefine: levelThreshold is the number of points needed to complete the *current* level.
+            // When a level starts, score towards this level is 0.
+            // This means `levelThreshold` should be calculated when leveling up.
+            
+            const scoreInThisLevel = score - (level > 1 ? ( (level-1)*10 + 5 * (level-1)*(level-2)/2 ) : 0); // Score accumulated since start of current level
+            const currentLevelTargetPoints = 10 + (level-1)*5; // Points needed for *this specific level*
+
+            const percentage = currentLevelTargetPoints > 0 ? (scoreInThisLevel / currentLevelTargetPoints) * 100 : 0;
+            
+            progressFill.style.width = Math.min(100, Math.max(0, percentage)) + '%'; 
+            progressText.innerText = `Score: ${score}`;
+            progressFill.style.backgroundColor = percentage > 80 ? '#FFD700' : 'var(--primary)';
+        }
+
+        function updateLevelBadge() {
+            const levelBadge = document.getElementById('levelBadge');
+            if (levelBadge) levelBadge.innerText = `Level ${level}`;
+        }
+        
+        function checkLevelUp() {
+            // Points needed to complete current level 'L' is (10 + (L-1)*5)
+            // Total score needed to *reach* level L+1:
+            // L1: 10
+            // L2: 10 + (10+5) = 25
+            // L3: 25 + (10+10) = 45
+            // L4: 45 + (10+15) = 70
+            let scoreNeededForNextLevel = 0;
+            for(let i=1; i<=level; i++){
+                scoreNeededForNextLevel += (10 + (i-1)*5);
+            }
+
+            if (score >= scoreNeededForNextLevel) {
+                level++; 
+                updateLevelBadge(); 
+                // levelThreshold = 10 + (level-1)*5; // Update threshold for the NEW current level
+
+                const badgeEl = document.getElementById('levelBadge');
+                if (badgeEl) {
+                    badgeEl.style.transform = 'scale(1.5)'; badgeEl.style.backgroundColor = '#FFD700';
+                    setTimeout(() => { badgeEl.style.transform = 'scale(1)'; badgeEl.style.backgroundColor = 'rgba(255,255,255,0.9)'; }, 1000);
+                }
+                const visualCol = document.querySelector('.visual-column');
+                if (visualCol) {
+                    const flash = document.createElement('div');
+                    flash.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(255,215,0,0.3);z-index:5;pointer-events:none;';
+                    visualCol.appendChild(flash);
+                    setTimeout(() => visualCol.removeChild(flash), 500); 
+                }
+                saveProgress(); 
+                updateProgressBar(); // Update progress bar based on new level and its threshold
+            }
+        }
+    </script>
+    
+    <style>
+        /* Animations for food images (already defined, kept for completeness) */
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(5px) rotate(3deg)} 50%{transform:translateX(-5px) rotate(-3deg)} 75%{transform:translateX(3px) rotate(2deg)} }
+        @keyframes rotate { from{transform:rotate(0deg) scale(1)} 50%{transform:rotate(180deg) scale(1.1)} to{transform:rotate(360deg) scale(1)} }
+    </style>
+    </body>
+</html>
+�
