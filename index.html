@@ -26,7 +26,7 @@
             --primary-dark: #00B248;
             --dark: #222;
             --light: #FCFCFC;
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Faster transition */
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
         }
 
         body {
@@ -60,7 +60,7 @@
             background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
                         url('./assets/images/background.jpg') center/cover;
             display: flex;
-            flex-direction: column; /* Align items vertically for progress bar etc. */
+            flex-direction: column; 
             justify-content: center;
             align-items: center;
             padding: 2rem;
@@ -80,14 +80,12 @@
 
         .feature-cards {
             display: flex;
-            position: absolute;
-            bottom: 2rem;
-            left: 0;
-            right: 0;
             justify-content: center;
             gap: 1.5rem;
             flex-wrap: wrap; 
-            margin-top: 2rem; /* Add some margin if needed */
+            margin-top: 1rem; /* Space above feature cards */
+position: absolute;
+bottom: 30px;
         }
 
         .feature-card {
@@ -179,8 +177,6 @@
         }
 
         .progress-bar {
-            /* position: relative; // No longer relative to top -5rem */
-            /* top: -5rem;  */
             background-color: rgba(255, 255, 255, 0.3);
             border-radius: 20px;
             width: 150px;
@@ -190,7 +186,7 @@
             display: flex;
             align-items: center;
             padding: 0 5px;
-            margin-bottom: 1rem; /* Space below progress bar */
+            margin-bottom: 1rem; 
         }
         
         .progress-fill {
@@ -203,7 +199,7 @@
         
         .progress-text {
             position: relative;
-            width: 100%;
+            width: 100%; /* Relative to progress-bar */
             text-align: center;
             color: white;
             font-weight: bold;
@@ -218,8 +214,8 @@
 
         .level-badge {
             position: absolute;
-            top: 2.3rem;
-            right: 2.3rem; /* Default desktop position */
+            top: 2rem;     /* Adjusted for consistency */
+            right: 2rem;    /* Adjusted for consistency */
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 12px;
             padding: 5px 12px;
@@ -228,7 +224,7 @@
             color: var(--dark);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             display: none; 
-            z-index: 10; /* Ensure it's above other elements like share buttons on mobile */
+            z-index: 10; 
         }
 
         .streak-effect {
@@ -257,35 +253,34 @@
             100% { opacity: 0; transform: translate(-50%, -40px); }
         }
 
-        /* Game Share Buttons (in Visual Column) */
+        /* Game Share Buttons (in Visual Column, in flow) */
         .game-share-buttons-container {
-            position: absolute;
+            /* position: absolute; REMOVED */
             display: flex;
+            flex-direction: row; /* Icons horizontal */
             gap: 0.75rem;
-            z-index: 15; /* Above other elements in visual column */
-            /* Desktop default: left vertical */
-            left: 1.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            flex-direction: column;
+            z-index: 5; /* Lowered z-index, no longer needs to be above everything */
+            margin-top: 1rem;    /* Space above share buttons */
+            margin-bottom: 1rem; /* Space below share buttons */
+            /* Centered by visual-column's align-items: center */
         }
 
         .game-share-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 36px; /* Slightly smaller */
+            width: 36px; 
             height: 36px;
             border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
-            color: white; /* Icon color */
+            background-color: rgba(255, 255, 255, 0.2); 
+            color: white; 
             text-decoration: none;
             transition: var(--transition);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             border: 1px solid rgba(255,255,255,0.3);
         }
         .game-share-icon svg {
-            width: 18px; /* Smaller icon */
+            width: 18px; 
             height: 18px;
             fill: currentColor;
         }
@@ -321,7 +316,7 @@
         .tagline {
             font-size: 1.5rem;
             color: #555;
-            margin-bottom: 2rem; /* Restored original margin, old share buttons removed */
+            margin-bottom: 2rem; 
             max-width: 650px;
         }
 
@@ -449,14 +444,14 @@
             visibility: visible;
             transition: opacity 0.3s ease;
         }
-        .modal-content { /* General modal content style */
+        .modal-content { 
             background-color: white;
-            padding: 1.5rem; /* Adjusted padding */
+            padding: 1.5rem; 
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             text-align: center;
             max-width: 90%;
-            width: 380px; /* Slightly wider for nickname modal */
+            width: 380px; 
             transform: scale(0.9);
             transition: transform 0.3s ease;
         }
@@ -466,12 +461,12 @@
         .modal-content h3, .nickname-modal-content h4 {
             color: var(--primary);
             margin-bottom: 1rem;
-            font-size: 1.4rem; /* Adjusted size */
+            font-size: 1.4rem; 
         }
         .modal-content p, .nickname-modal-content p {
-            margin-bottom: 1rem; /* Adjusted margin */
+            margin-bottom: 1rem; 
             color: #555;
-            font-size: 0.95rem; /* Adjusted size */
+            font-size: 0.95rem; 
         }
         .modal-close-button, .nickname-modal-content button {
             background-color: var(--primary);
@@ -482,7 +477,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            margin: 0.25rem; /* Spacing for multiple buttons */
+            margin: 0.25rem; 
         }
         .modal-close-button:hover, .nickname-modal-content button:hover {
             background-color: var(--primary-dark);
@@ -537,7 +532,7 @@
                 grid-template-rows: auto 1fr; 
             }
             .visual-column {
-                min-height: 380px; /* Adjusted min-height for mobile share buttons */
+                min-height: 380px; 
                 height: auto; 
                 order: 1;
             }
@@ -547,19 +542,15 @@
             }
             .headline { font-size: 2.5rem; }
             .feature-cards {
-                /* position: relative;  // Removed, already flex item */
-                /* bottom: auto; */
-                margin-top: 1rem; /* Reduced margin */
-                padding-bottom: 1rem; /* Reduced padding */
+                margin-top: 3rem; 
+                padding-bottom: 1rem;
+position: relative; 
             }
             .logo {
-                color: white; 
                 top: 1.5rem; left: 1.5rem; 
             }
             .progress-bar {
-                /* top: auto;  // Removed */
-                margin-top: 0; /* Adjusted margin */
-                /* position: relative; // Removed */
+                margin-top: 0; 
                 margin-bottom: 1rem;
             }
             .level-badge {
@@ -569,19 +560,18 @@
 
         @media (max-width: 768px) {
             .game-share-buttons-container {
-                /* Mobile: top right horizontal */
-                left: auto;
-                right: 1rem;
-                top: 1rem;
-                transform: none;
-                flex-direction: row;
+                /* No longer top-right, will be centered by parent flex */
+                /* left: auto; REMOVED */
+                /* right: 1rem; REMOVED */
+                /* top: 1rem; REMOVED */
+                /* transform: none; REMOVED */
+                /* flex-direction: row; // Already default */
             }
-            .level-badge { /* Ensure level badge doesn't overlap with share buttons on mobile */
-                top: 1rem;
-                right: auto; 
-                left: calc(1rem + (36px * 4) + (0.5rem * 3) + 1rem); /* Position next to share buttons */
-                /* Or position it below logo if space is tight */
-                /* top: 4rem; left: 1rem; */
+            .level-badge { 
+                /* Revert to consistent top-right positioning */
+                top: 1.5rem; /* Match 1024px breakpoint */
+                right: 1.5rem;
+                left: auto; /* Remove previous calc */
             }
             .feature-cards {
                 gap: 1rem; 
@@ -593,12 +583,10 @@
             }
             .contact-info { flex-direction: column; gap: 1rem; }
             .input-row { flex-direction: column; }
-            /* Progress bar and level badge original mobile positions - might need adjustment if share buttons are top right */
             .progress-bar {
-                 position: static; /* Let it flow in the flex column */
-                 margin-top: 1rem; /* Space from elements above */
+                 position: static; 
+                 margin-top: 1rem; 
             }
-            /* Level badge is now positioned relative to share buttons on mobile */
 
             .headline { font-size: 2.2rem; }
             .tagline { font-size: 1.1rem; margin-bottom: 1rem; } 
@@ -610,8 +598,8 @@
             .visual-column { min-height: 320px; padding: 1rem; }
             .content-column { padding: 2rem 1.5rem; }
             .logo { font-size: 1.3rem; top: 1rem; left: 1rem; }
-            .game-share-buttons-container { /* Adjust for very small screens */
-                gap: 0.3rem;
+            .game-share-buttons-container { 
+                gap: 0.5rem; /* Slightly more space for touch */
             }
             .game-share-icon {
                 width: 32px; height: 32px;
@@ -620,7 +608,10 @@
                 width: 16px; height: 16px;
             }
             .level-badge {
-                 left: calc(1rem + (32px * 4) + (0.3rem * 3) + 0.5rem); /* Adjust based on smaller icons */
+                 /* Revert to consistent top-right */
+                 top: 1rem;
+                 right: 1rem;
+                 left: auto;
                  font-size: 0.7rem; padding: 4px 8px;
             }
 
@@ -629,7 +620,7 @@
             .cta-button { padding: 0.8rem 1.5rem; font-size: 0.9rem; margin-bottom: 1.5rem; width: 100%; text-align: center; }
             .form-container { width: 100%; }
             .submit-button { width: 100%; }
-            .feature-cards { bottom: 1rem; gap: 0.8rem; }
+            .feature-cards { bottom: 1rem; gap: 0.8rem; margin-top: 1rem;} /* Ensure margin from share buttons */
             .feature-card { width: 100px; height: 130px; padding: 0.8rem; }
             .feature-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
             .feature-card .text { font-size: 0.7rem; }
@@ -654,10 +645,13 @@
 </head>
 <body>
     <div class="page-container">
-        <!-- Visual Column -->
         <div class="visual-column">
             <div class="logo">nutriwai</div>
-            <!-- Game Share Buttons Container -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+                <div class="progress-text" id="progressText">Score: 0</div>
+            </div>
+
             <div class="game-share-buttons-container">
                 <a href="#" class="game-share-icon facebook" data-service="facebook" title="Share on Facebook">
                     <svg viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C18.34 21.21 22 17.06 22 12.06C22 6.53 17.5 2.04 12 2.04Z"/></svg>
@@ -673,12 +667,6 @@
                 </a>
             </div>
 
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-                <div class="progress-text" id="progressText">Score: 0</div>
-            </div>
-            <!-- Level Badge will be appended here by JS -->
-            <!-- Streak Effect will be appended here by JS -->
             <div class="feature-cards">
                 <div class="feature-card" onclick="addPoint(this, 0)">
                     <div class="points-popup">+1</div>
@@ -707,7 +695,6 @@
             </div>
         </div>
 
-        <!-- Content Column -->
         <div class="content-column">
             <h1 class="headline">Eat Smarter with AI</h1>
             <p class="tagline">Your personal nutrition coach powered by artificial intelligence. Simple. Smart. Effective.</p>
@@ -752,7 +739,6 @@
         </div>
     </div>
 
-    <!-- Form Submission Modal -->
     <div class="modal-overlay" id="submissionModal">
         <div class="modal-content">
             <h3 id="modalTitle">Thank You!</h3>
@@ -761,9 +747,8 @@
         </div>
     </div>
 
-    <!-- Nickname/Share Progress Modal -->
     <div class="modal-overlay" id="nicknameModal">
-        <div class="nickname-modal-content modal-content"> <!-- Re-use modal-content for base styling -->
+        <div class="nickname-modal-content modal-content"> 
             <h4>Share Your Progress!</h4>
             <p>Enter a nickname (optional):</p>
             <input type="text" id="shareNicknameInput" placeholder="Your Nickname">
@@ -833,12 +818,12 @@
             const levelBadgeEl = document.createElement('div');
             levelBadgeEl.className = 'level-badge';
             levelBadgeEl.id = 'levelBadge';
-            if(visualColumn) visualColumn.appendChild(levelBadgeEl);
+            if(visualColumn) visualColumn.appendChild(levelBadgeEl); // Appends to visual-column, CSS handles absolute positioning
 
             const streakEffectEl = document.createElement('div');
             streakEffectEl.className = 'streak-effect';
             streakEffectEl.id = 'streakEffect';
-            if(visualColumn) visualColumn.appendChild(streakEffectEl);
+            if(visualColumn) visualColumn.appendChild(streakEffectEl); // Appends to visual-column, CSS handles absolute positioning
 
             loadProgress(); 
             
@@ -885,8 +870,8 @@
                 icon.addEventListener('click', function(e) {
                     e.preventDefault();
                     currentShareService = this.dataset.service;
-                    shareNicknameInput.value = ''; // Reset nickname input
-                    updateSharePreview(''); // Update with no nickname initially
+                    shareNicknameInput.value = ''; 
+                    updateSharePreview(''); 
                     nicknameModal.classList.add('active');
                 });
             });
@@ -925,7 +910,7 @@
                             clipboardToast.classList.add('show');
                             setTimeout(() => clipboardToast.classList.remove('show'), 3000);
                         });
-                        shareUrl = 'https://www.instagram.com/nutriwai/'; // Link to profile
+                        shareUrl = 'https://www.instagram.com/nutriwai/'; 
                         break;
                 }
                 if (shareUrl) {
