@@ -18,7 +18,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            -webkit-text-size-adjust: 100%; /* Prevent font size inflation on mobile */
+            -webkit-text-size-adjust: 100%;
         }
 
         :root {
@@ -26,28 +26,28 @@
             --primary-dark: #00B248;
             --dark: #222;
             --light: #FCFCFC;
-            --transition: all 0.66s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Faster transition */
         }
 
         body {
             color: var(--dark);
             overflow-x: hidden;
-            background-color: black; /* Changed from white to black as per visual column */
+            background-color: black; 
             text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
         
         html {
-            touch-action: manipulation; /* Improves touch responsiveness */
+            touch-action: manipulation; 
         }
         
         body.mobile-device .feature-card:hover {
-            transform: none; /* Disable hover effects on mobile */
+            transform: none; 
         }
         
         body.mobile-device .feature-card:active {
-            transform: translateY(-5px); /* Use active state instead for mobile */
+            transform: translateY(-5px); 
         }
 
         .page-container {
@@ -60,13 +60,13 @@
             background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
                         url('./assets/images/background.jpg') center/cover;
             display: flex;
+            flex-direction: column; /* Align items vertically for progress bar etc. */
             justify-content: center;
             align-items: center;
             padding: 2rem;
             position: relative;
-	flex-direction: column;
         }
-        a {color: #00662B;} /* Corrected hex color */
+        a {color: #00662B;} 
 
         .logo {
             position: absolute;
@@ -86,7 +86,8 @@
             right: 0;
             justify-content: center;
             gap: 1.5rem;
-            flex-wrap: wrap; /* Allow wrapping on smaller screens if needed */
+            flex-wrap: wrap; 
+            margin-top: 2rem; /* Add some margin if needed */
         }
 
         .feature-card {
@@ -99,7 +100,7 @@
             align-items: center;
             justify-content: center;
             padding: 1rem;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* Adjusted shadow for better subtlety */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); 
             transition: var(--transition);
             position: relative;
             cursor: pointer;
@@ -124,12 +125,12 @@
         }
 
         .feature-card:hover {
-            transform: translateY(-10px) rotate(1deg); /* Slightly reduced hover effect */
+            transform: translateY(-10px) rotate(1deg); 
             box-shadow: 0 18px 38px rgba(0, 0, 0, 0.2);
         }
 
         .feature-card .icon {
-            font-size: 2.5rem; /* This will be overridden by image size if using img tag */
+            font-size: 2.5rem; 
             margin-bottom: 0.8rem;
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
@@ -137,7 +138,7 @@
         }
 
         .feature-card:hover .icon {
-            transform: scale(1.2); /* Slightly reduced icon scale */
+            transform: scale(1.2); 
         }
 
         .feature-card .text {
@@ -178,8 +179,8 @@
         }
 
         .progress-bar {
-            position: relative;
-            top: -5rem; /* Adjust as needed based on layout */
+            /* position: relative; // No longer relative to top -5rem */
+            /* top: -5rem;  */
             background-color: rgba(255, 255, 255, 0.3);
             border-radius: 20px;
             width: 150px;
@@ -189,18 +190,19 @@
             display: flex;
             align-items: center;
             padding: 0 5px;
+            margin-bottom: 1rem; /* Space below progress bar */
         }
         
         .progress-fill {
             background-color: var(--primary);
-            border-radius: 20px; /* Match parent for smooth fill */
-            height: 20px; /* Adjust to be slightly less than parent for border effect */
+            border-radius: 20px; 
+            height: 20px; 
             width: 0%;
             transition: width 0.5s ease;
         }
         
         .progress-text {
-            position: absolute;
+            position: relative;
             width: 100%;
             text-align: center;
             color: white;
@@ -210,14 +212,14 @@
         }
         .food-image {
              width: 60px;
-             height: 60px; /* Ensure consistent image size */
-             object-fit: contain; /* Prevents image distortion */
+             height: 60px; 
+             object-fit: contain; 
         }
 
         .level-badge {
             position: absolute;
             top: 2.3rem;
-            right: 2.3rem;
+            right: 2.3rem; /* Default desktop position */
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 12px;
             padding: 5px 12px;
@@ -225,16 +227,16 @@
             font-weight: bold;
             color: var(--dark);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            display: none; /* Initially hidden, shown by JS */
-            z-index: 5;
+            display: none; 
+            z-index: 10; /* Ensure it's above other elements like share buttons on mobile */
         }
 
         .streak-effect {
             position: absolute;
-            top: 100px; /* Adjust as needed */
+            top: 100px; 
             left: 50%;
             transform: translateX(-50%);
-            width: auto; /* Fit content */
+            width: auto; 
             padding: 5px 10px;
             text-align: center;
             font-size: 1.2rem;
@@ -254,6 +256,49 @@
             80% { opacity: 1; transform: translate(-50%, -30px); }
             100% { opacity: 0; transform: translate(-50%, -40px); }
         }
+
+        /* Game Share Buttons (in Visual Column) */
+        .game-share-buttons-container {
+            position: absolute;
+            display: flex;
+            gap: 0.75rem;
+            z-index: 15; /* Above other elements in visual column */
+            /* Desktop default: left vertical */
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            flex-direction: column;
+        }
+
+        .game-share-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px; /* Slightly smaller */
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+            color: white; /* Icon color */
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .game-share-icon svg {
+            width: 18px; /* Smaller icon */
+            height: 18px;
+            fill: currentColor;
+        }
+        .game-share-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .game-share-icon.facebook:hover { background-color: #1877F2; border-color: #1877F2;}
+        .game-share-icon.instagram:hover { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%); border:none;}
+        .game-share-icon.linkedin:hover { background-color: #0A66C2; border-color: #0A66C2;}
+        .game-share-icon.whatsapp:hover { background-color: #25D366; border-color: #25D366;}
+
 
         .content-column {
             background-color: white;
@@ -276,7 +321,7 @@
         .tagline {
             font-size: 1.5rem;
             color: #555;
-            margin-bottom: 2rem;
+            margin-bottom: 2rem; /* Restored original margin, old share buttons removed */
             max-width: 650px;
         }
 
@@ -342,17 +387,17 @@
         .input-group textarea {
             width: 100%;
             padding: 0.75rem 1rem;
-            border: 1px solid #00c853; /* Changed to var(--primary) for consistency */
+            border: 1px solid var(--primary); 
             border-radius: 8px;
-            font-size: 1rem; /* Adjusted for better consistency */
+            font-size: 1rem; 
             transition: var(--transition);
         }
 
         .input-group input:focus,
         .input-group textarea:focus {
             outline: none;
-            border-color: var(--primary-dark); /* Darker shade on focus */
-            box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.2); /* Adjusted alpha */
+            border-color: var(--primary-dark); 
+            box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.2); 
         }
 
         .submit-button {
@@ -360,19 +405,19 @@
             color: white;
             border: none;
             padding: 0.75rem 1.5rem;
-            font-size: 1.1rem; /* Adjusted for better consistency */
+            font-size: 1.1rem; 
             font-weight: 600;
 	        letter-spacing: 0.5px;
             border-radius: 50px;
             cursor: pointer;
             transition: var(--transition);
-            box-shadow: 0 5px 15px rgba(0, 102, 43, 0.2); /* Matched color */
+            box-shadow: 0 5px 15px rgba(0, 102, 43, 0.2); 
         }
 
         .submit-button:hover {
             background-color: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 178, 72, 0.3); /* Matched color */
+            box-shadow: 0 8px 20px rgba(0, 178, 72, 0.3); 
         }
 
         footer {
@@ -383,7 +428,7 @@
             color: #999;
         }
 
-        /* Modal Styles */
+        /* Form Submission Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -404,31 +449,31 @@
             visibility: visible;
             transition: opacity 0.3s ease;
         }
-        .modal-content {
+        .modal-content { /* General modal content style */
             background-color: white;
-            padding: 2rem;
+            padding: 1.5rem; /* Adjusted padding */
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             text-align: center;
             max-width: 90%;
-            width: 350px;
+            width: 380px; /* Slightly wider for nickname modal */
             transform: scale(0.9);
             transition: transform 0.3s ease;
         }
         .modal-overlay.active .modal-content {
             transform: scale(1);
         }
-        .modal-content h3 {
+        .modal-content h3, .nickname-modal-content h4 {
             color: var(--primary);
             margin-bottom: 1rem;
-            font-size: 1.5rem;
+            font-size: 1.4rem; /* Adjusted size */
         }
-        .modal-content p {
-            margin-bottom: 1.5rem;
+        .modal-content p, .nickname-modal-content p {
+            margin-bottom: 1rem; /* Adjusted margin */
             color: #555;
-            font-size: 1rem;
+            font-size: 0.95rem; /* Adjusted size */
         }
-        .modal-close-button {
+        .modal-close-button, .nickname-modal-content button {
             background-color: var(--primary);
             color: white;
             border: none;
@@ -437,9 +482,51 @@
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            margin: 0.25rem; /* Spacing for multiple buttons */
         }
-        .modal-close-button:hover {
+        .modal-close-button:hover, .nickname-modal-content button:hover {
             background-color: var(--primary-dark);
+        }
+        .nickname-modal-content input[type="text"] {
+            width: calc(100% - 2rem);
+            padding: 0.6rem 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .nickname-modal-content .cancel-share-button {
+            background-color: #777;
+        }
+         .nickname-modal-content .cancel-share-button:hover {
+            background-color: #555;
+        }
+        .share-message-preview {
+            font-size: 0.9em;
+            margin: 10px 0 15px 0;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+            word-wrap: break-word;
+        }
+        .clipboard-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--dark);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        .clipboard-toast.show {
+            opacity: 1;
         }
 
 
@@ -447,11 +534,11 @@
         @media (max-width: 1024px) {
             .page-container {
                 grid-template-columns: 1fr;
-                grid-template-rows: auto 1fr; /* Changed from 40vh 1fr */
+                grid-template-rows: auto 1fr; 
             }
             .visual-column {
-                min-height: 350px; /* Ensure it has some height */
-                height: auto; /* Let content dictate height or set a specific vh */
+                min-height: 380px; /* Adjusted min-height for mobile share buttons */
+                height: auto; 
                 order: 1;
             }
             .content-column {
@@ -459,57 +546,86 @@
                 padding: 3rem 2rem;
             }
             .headline { font-size: 2.5rem; }
-            /* .feature-circles removed as it's not in HTML, assuming .feature-cards */
             .feature-cards {
-                position: relative; /* Changed from absolute for flow */
-                bottom: auto;
-                margin-top: 20rem; /* Add some space if it's in flow now */
-                padding-bottom: 2rem; /* Space at the bottom */
+                /* position: relative;  // Removed, already flex item */
+                /* bottom: auto; */
+                margin-top: 1rem; /* Reduced margin */
+                padding-bottom: 1rem; /* Reduced padding */
             }
             .logo {
-                color: white; /* Ensure logo is visible on dark background */
-                top: 1.5rem; left: 1.5rem; /* Adjusted for smaller screens */
+                color: white; 
+                top: 1.5rem; left: 1.5rem; 
             }
             .progress-bar {
-                top: auto; /* Reset top positioning for flow or new relative pos */
-                margin-top: 1rem; /* Example spacing */
-                position: relative; /* Ensure it's not absolutely positioned conflictingly */
+                /* top: auto;  // Removed */
+                margin-top: 0; /* Adjusted margin */
+                /* position: relative; // Removed */
+                margin-bottom: 1rem;
             }
             .level-badge {
-                top: 1.5rem; right: 1.5rem; /* Adjusted for smaller screens */
+                top: 1.5rem; right: 1.5rem; 
             }
         }
 
         @media (max-width: 768px) {
+            .game-share-buttons-container {
+                /* Mobile: top right horizontal */
+                left: auto;
+                right: 1rem;
+                top: 1rem;
+                transform: none;
+                flex-direction: row;
+            }
+            .level-badge { /* Ensure level badge doesn't overlap with share buttons on mobile */
+                top: 1rem;
+                right: auto; 
+                left: calc(1rem + (36px * 4) + (0.5rem * 3) + 1rem); /* Position next to share buttons */
+                /* Or position it below logo if space is tight */
+                /* top: 4rem; left: 1rem; */
+            }
             .feature-cards {
-                gap: 1rem; /* Reduce gap */
-                justify-content: space-around; /* Better distribution */
+                gap: 1rem; 
+                justify-content: space-around; 
             }
             .feature-card {
-                width: 110px; /* Adjust card size */
+                width: 110px; 
                 height: 140px;
             }
             .contact-info { flex-direction: column; gap: 1rem; }
             .input-row { flex-direction: column; }
+            /* Progress bar and level badge original mobile positions - might need adjustment if share buttons are top right */
             .progress-bar {
-                position: absolute; /* Re-evaluate if needed, or keep relative */
-                left: 1rem; right: auto; top: 4rem; /* If absolute */
+                 position: static; /* Let it flow in the flex column */
+                 margin-top: 1rem; /* Space from elements above */
             }
-            .level-badge {
-                left: 1rem; right: auto; top: 7rem; /* If absolute */
-            }
+            /* Level badge is now positioned relative to share buttons on mobile */
+
             .headline { font-size: 2.2rem; }
-            .tagline { font-size: 1.1rem; margin-bottom: 2rem; }
+            .tagline { font-size: 1.1rem; margin-bottom: 1rem; } 
             .cta-button { padding: 0.9rem 1.8rem; margin-bottom: 2rem; font-size: 0.95rem; }
             footer { position: relative; text-align: center; margin-top: 2rem; padding: 1rem 0; border-top: 1px solid #eee; width: 100%; bottom: auto; right: auto;}
         }
         
         @media (max-width: 480px) {
-            .visual-column { min-height: 300px; padding: 1rem; }
+            .visual-column { min-height: 320px; padding: 1rem; }
             .content-column { padding: 2rem 1.5rem; }
             .logo { font-size: 1.3rem; top: 1rem; left: 1rem; }
+            .game-share-buttons-container { /* Adjust for very small screens */
+                gap: 0.3rem;
+            }
+            .game-share-icon {
+                width: 32px; height: 32px;
+            }
+            .game-share-icon svg {
+                width: 16px; height: 16px;
+            }
+            .level-badge {
+                 left: calc(1rem + (32px * 4) + (0.3rem * 3) + 0.5rem); /* Adjust based on smaller icons */
+                 font-size: 0.7rem; padding: 4px 8px;
+            }
+
             .headline { font-size: 1.9rem; margin-bottom: 1rem; }
-            .tagline { font-size: 1rem; margin-bottom: 1.5rem; }
+            .tagline { font-size: 1rem; margin-bottom: 1rem; } 
             .cta-button { padding: 0.8rem 1.5rem; font-size: 0.9rem; margin-bottom: 1.5rem; width: 100%; text-align: center; }
             .form-container { width: 100%; }
             .submit-button { width: 100%; }
@@ -517,7 +633,7 @@
             .feature-card { width: 100px; height: 130px; padding: 0.8rem; }
             .feature-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
             .feature-card .text { font-size: 0.7rem; }
-            .progress-bar { width: 120px; height: 25px; /* May need to adjust if absolute positioning is kept */ }
+            .progress-bar { width: 120px; height: 25px;  }
             .progress-fill { height: 15px; }
             .progress-text { font-size: 0.7rem; }
             .points-popup { width: 30px; height: 30px; font-size: 0.8rem; }
@@ -525,12 +641,12 @@
         }
         
         @media (max-width: 768px) {
-            .feature-card, .cta-button, .submit-button {
+            .feature-card, .cta-button, .submit-button, .game-share-icon { 
                 cursor: pointer;
                 -webkit-tap-highlight-color: transparent;
             }
             input, textarea, button {
-                font-size: 16px !important; /* Prevent zoom on input focus on iOS */
+                font-size: 16px !important; 
             }
             body { -webkit-overflow-scrolling: touch; }
         }
@@ -538,12 +654,31 @@
 </head>
 <body>
     <div class="page-container">
+        <!-- Visual Column -->
         <div class="visual-column">
             <div class="logo">nutriwai</div>
+            <!-- Game Share Buttons Container -->
+            <div class="game-share-buttons-container">
+                <a href="#" class="game-share-icon facebook" data-service="facebook" title="Share on Facebook">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C18.34 21.21 22 17.06 22 12.06C22 6.53 17.5 2.04 12 2.04Z"/></svg>
+                </a>
+                <a href="#" class="game-share-icon instagram" data-service="instagram" title="Share on Instagram">
+                    <svg viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>
+                </a>
+                <a href="#" class="game-share-icon linkedin" data-service="linkedin" title="Share on LinkedIn">
+                    <svg viewBox="0 0 24 24"><path d="M19 3A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H19M18.5 18.5V13.2A3.26 3.26 0 0 0 15.24 9.94C14.39 9.94 13.4 10.46 12.92 11.24V10.13H10.13V18.5H12.92V13.57C12.92 12.8 13.54 12.17 14.31 12.17A1.4 1.4 0 0 1 15.71 13.57V18.5H18.5M6.88 8.56A1.68 1.68 0 0 0 8.56 6.88C8.56 5.95 7.81 5.19 6.88 5.19A1.69 1.69 0 0 0 5.19 6.88C5.19 7.81 5.95 8.56 6.88 8.56M8.27 18.5V10.13H5.5V18.5H8.27Z"/></svg>
+                </a>
+                <a href="#" class="game-share-icon whatsapp" data-service="whatsapp" title="Share on WhatsApp">
+                    <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 12C2.13 13.85 2.61 15.62 3.4 17.19L2 22L7 20.62C8.53 21.35 10.24 21.76 12.04 21.76C17.5 21.76 21.95 17.31 21.95 11.76C21.95 6.21 17.5 2 12.04 2M12.04 3.64C16.57 3.64 20.27 7.34 20.27 11.87C20.27 16.4 16.57 20.1 12.04 20.1C10.44 20.1 8.96 19.65 7.72 18.89L7.23 18.59L4.41 19.31L5.15 16.58L4.84 16.09C3.96 14.71 3.55 13.09 3.55 11.37C3.55 7.34 7.25 3.64 12.04 3.64M16.95 14.3C16.71 14.23 15.53 13.68 15.31 13.59C15.08 13.51 14.92 13.46 14.75 13.71C14.58 13.95 14.06 14.54 13.88 14.71C13.71 14.88 13.54 14.92 13.3 14.84C13.06 14.75 12.17 14.45 11.12 13.54C10.31 12.83 9.77 11.95 9.6 11.7C9.43 11.46 9.55 11.34 9.68 11.21C9.8 11.09 9.96 10.89 10.12 10.73C10.28 10.56 10.32 10.44 10.44 10.2C10.56 9.96 10.48 9.77 10.4 9.6C10.32 9.43 9.84 8.26 9.64 7.78C9.45 7.3 9.25 7.34 9.12 7.33H8.78C8.61 7.33 8.33 7.38 8.08 7.62C7.84 7.86 7.25 8.41 7.25 9.53C7.25 10.66 8.13 11.74 8.25 11.91C8.38 12.08 9.77 14.34 12.04 15.23C12.64 15.49 13.06 15.62 13.39 15.73C13.95 15.91 14.42 15.86 14.75 15.82C15.12 15.78 16.02 15.27 16.22 14.79C16.41 14.3 16.41 13.92 16.34 13.83C16.27 13.74 16.14 13.7 15.95 13.62Z"/></svg>
+                </a>
+            </div>
+
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
                 <div class="progress-text" id="progressText">Score: 0</div>
             </div>
+            <!-- Level Badge will be appended here by JS -->
+            <!-- Streak Effect will be appended here by JS -->
             <div class="feature-cards">
                 <div class="feature-card" onclick="addPoint(this, 0)">
                     <div class="points-popup">+1</div>
@@ -572,9 +707,11 @@
             </div>
         </div>
 
+        <!-- Content Column -->
         <div class="content-column">
             <h1 class="headline">Eat Smarter with AI</h1>
             <p class="tagline">Your personal nutrition coach powered by artificial intelligence. Simple. Smart. Effective.</p>
+            
             <div>
                 <figure>
                     <figcaption style="margin-bottom: 8px;">Listen to podcast</figcaption>
@@ -615,6 +752,7 @@
         </div>
     </div>
 
+    <!-- Form Submission Modal -->
     <div class="modal-overlay" id="submissionModal">
         <div class="modal-content">
             <h3 id="modalTitle">Thank You!</h3>
@@ -623,30 +761,39 @@
         </div>
     </div>
 
+    <!-- Nickname/Share Progress Modal -->
+    <div class="modal-overlay" id="nicknameModal">
+        <div class="nickname-modal-content modal-content"> <!-- Re-use modal-content for base styling -->
+            <h4>Share Your Progress!</h4>
+            <p>Enter a nickname (optional):</p>
+            <input type="text" id="shareNicknameInput" placeholder="Your Nickname">
+            <p class="share-message-preview" id="shareMessagePreview"></p>
+            <div style="margin-top:1rem;">
+                <button id="confirmShareButton">Confirm & Share</button>
+                <button id="skipShareButton">Skip & Share</button>
+                <button id="cancelShareButton" class="cancel-share-button">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="clipboard-toast" id="clipboardToast">Message copied to clipboard!</div>
+
+
     <script>
         // --- Game Mechanics & Progress Saving ---
         let score = 0;
         let streak = 0;
         let level = 1;
-        let levelThreshold = 10; // Initial threshold
+        let levelThreshold = 10; 
         let cooldowns = [0, 0, 0];
         let lastClickedIndex = -1;
 
         const NUTRIWAI_PROGRESS_KEY = 'nutriwaiGameProgress';
 
-        // Function to save progress to localStorage
         function saveProgress() {
-            const progress = {
-                score: score,
-                level: level,
-                levelThreshold: levelThreshold,
-                // lastClickedIndex: lastClickedIndex, // Optional: save if needed for game state
-                // streak: streak // Optional: save if needed
-            };
+            const progress = { score, level, levelThreshold };
             localStorage.setItem(NUTRIWAI_PROGRESS_KEY, JSON.stringify(progress));
         }
 
-        // Function to load progress from localStorage
         function loadProgress() {
             const savedProgress = localStorage.getItem(NUTRIWAI_PROGRESS_KEY);
             if (savedProgress) {
@@ -655,149 +802,143 @@
                     score = parseInt(progress.score, 10) || 0;
                     level = parseInt(progress.level, 10) || 1;
                     levelThreshold = parseInt(progress.levelThreshold, 10) || 10;
-                    // lastClickedIndex = progress.lastClickedIndex !== undefined ? parseInt(progress.lastClickedIndex, 10) : -1;
-                    // streak = parseInt(progress.streak, 10) || 0;
-                    
-                    console.log("Progress loaded:", progress);
                 } catch (e) {
-                    console.error("Error parsing saved progress:", e);
-                    // Initialize with defaults if parsing fails
-                    score = 0;
-                    level = 1;
-                    levelThreshold = 10;
+                    score = 0; level = 1; levelThreshold = 10;
                 }
-            } else {
-                 console.log("No saved progress found. Starting fresh.");
             }
-            updateProgressBar(); // Update UI with loaded/default values
-            updateLevelBadge(); // Update level badge with loaded/default values
+            updateProgressBar(); 
+            updateLevelBadge(); 
         }
 
-
         document.addEventListener('DOMContentLoaded', function() {
-            // Background image fallback
             const visualColumn = document.querySelector('.visual-column');
-            if (visualColumn) { // Ensure element exists
+            if (visualColumn) { 
                 const img = new Image();
-                img.onload = function() { /* Image loaded successfully */ };
-                img.onerror = function() {
-                    visualColumn.style.background = 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), linear-gradient(45deg, #009688, #4CAF50)';
-                };
-                // Extract URL from CSS (this is tricky and might not always work reliably)
-                // It's better if the URL is directly available or set via JS if dynamic
+                img.onerror = () => visualColumn.style.background = 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), linear-gradient(45deg, #009688, #4CAF50)';
                 const currentBg = window.getComputedStyle(visualColumn).backgroundImage;
                 const urlMatch = currentBg.match(/url\(["']?(.*?)["']?\)/);
-                if (urlMatch && urlMatch[1]) {
-                    img.src = urlMatch[1];
-                } else {
-                     // Fallback if URL can't be extracted, or set a default known one
-                    img.src = './assets/images/background.jpg';
-                }
+                img.src = urlMatch && urlMatch[1] ? urlMatch[1] : './assets/images/background.jpg';
             }
             
-            // Mobile device detection and optimizations
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             if (isMobile) {
                 document.body.classList.add('mobile-device');
-                const touchElements = document.querySelectorAll('.feature-card, .cta-button, .submit-button');
+                const touchElements = document.querySelectorAll('.feature-card, .cta-button, .submit-button, .game-share-icon');
                 touchElements.forEach(el => {
-                    el.addEventListener('touchstart', function() { this.style.transform = 'scale(0.97)'; }, {passive: true});
-                    el.addEventListener('touchend', function() { this.style.transform = ''; }, {passive: true});
+                    el.addEventListener('touchstart', () => el.style.transform = 'scale(0.97)', {passive: true});
+                    el.addEventListener('touchend', () => el.style.transform = '', {passive: true});
                 });
             }
 
-            // Create and append level badge
-            const levelBadge = document.createElement('div');
-            levelBadge.className = 'level-badge';
-            levelBadge.id = 'levelBadge';
-            if(document.querySelector('.visual-column')) { // Check if visual column exists
-                 document.querySelector('.visual-column').appendChild(levelBadge);
-            }
+            const levelBadgeEl = document.createElement('div');
+            levelBadgeEl.className = 'level-badge';
+            levelBadgeEl.id = 'levelBadge';
+            if(visualColumn) visualColumn.appendChild(levelBadgeEl);
 
-            // Create and append streak effect
-            const streakEffect = document.createElement('div');
-            streakEffect.className = 'streak-effect';
-            streakEffect.id = 'streakEffect';
-             if(document.querySelector('.visual-column')) { // Check if visual column exists
-                document.querySelector('.visual-column').appendChild(streakEffect);
-            }
+            const streakEffectEl = document.createElement('div');
+            streakEffectEl.className = 'streak-effect';
+            streakEffectEl.id = 'streakEffect';
+            if(visualColumn) visualColumn.appendChild(streakEffectEl);
 
-
-            loadProgress(); // Load progress after DOM is ready and elements are created
+            loadProgress(); 
             
-            // Show level badge after a short delay (if it was created)
-            const lb = document.getElementById('levelBadge');
-            if (lb) {
-                setTimeout(() => { lb.style.display = 'block'; }, 500); // Reduced delay
+            if (document.getElementById('levelBadge')) {
+                setTimeout(() => { document.getElementById('levelBadge').style.display = 'block'; }, 500); 
             }
             
             setInterval(updateCooldowns, 1000);
 
-            // Form submission handling
+            // Form submission handling (Subscribe form)
             const subscribeForm = document.getElementById('subscribeForm');
             const submissionModal = document.getElementById('submissionModal');
             const closeModalButton = document.getElementById('closeModalButton');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalMessage = document.getElementById('modalMessage');
-
-
             if (subscribeForm && submissionModal && closeModalButton) {
                 subscribeForm.addEventListener('submit', function(event) {
-                    event.preventDefault(); // Prevent default form submission
-
+                    event.preventDefault(); 
                     const name = document.getElementById('formName').value;
-                    const email = document.getElementById('formEmail').value;
-                    const challenge = document.getElementById('formChallenge').value;
-
-                    // --- TODO: Implement actual email sending here ---
-                    // This would typically involve a fetch request to a backend endpoint (e.g., a Cloudflare Worker)
-                    // For example:
-                    // fetch('/api/subscribe', {
-                    //     method: 'POST',
-                    //     headers: { 'Content-Type': 'application/json' },
-                    //     body: JSON.stringify({ name, email, challenge })
-                    // })
-                    // .then(response => response.json())
-                    // .then(data => {
-                    //     if (data.success) {
-                    //         modalTitle.textContent = "Thank You, " + name;
-                    //         modalMessage.textContent = "Your subscription is confirmed. We will be in touch at " + email + "!";
-                    //         submissionModal.classList.add('active');
-                    //         subscribeForm.reset(); // Clear form fields
-                    //     } else {
-                    //         modalTitle.textContent = "Submission Failed";
-                    //         modalMessage.textContent = data.message || "Something went wrong. Please try again.";
-                    //         submissionModal.classList.add('active');
-                    //     }
-                    // })
-                    // .catch(error => {
-                    //     console.error('Error submitting form:', error);
-                    //     modalTitle.textContent = "Error";
-                    //     modalMessage.textContent = "Could not submit the form. Please check your connection and try again.";
-                    //     submissionModal.classList.add('active');
-                    // });
-                    // --- End of TODO ---
-                    
-                    // For now, just show a generic success message
-                    modalTitle.textContent = "Thank You, " + (name || "Explorer");
-                    modalMessage.textContent = "Your details have been noted. We will keep you updated!";
+                    document.getElementById('modalTitle').textContent = "Thank You, " + (name || "Explorer") + "!";
+                    document.getElementById('modalMessage').textContent = "Your details have been noted. We'll keep you updated!";
                     submissionModal.classList.add('active');
                     subscribeForm.reset(); 
                 });
-
-                closeModalButton.addEventListener('click', function() {
-                    submissionModal.classList.remove('active');
-                });
-
-                // Close modal if user clicks outside of it
-                submissionModal.addEventListener('click', function(event) {
-                    if (event.target === submissionModal) {
-                        submissionModal.classList.remove('active');
-                    }
-                });
-            } else {
-                console.warn("Form or modal elements not found. Form submission will not work as expected.");
+                closeModalButton.addEventListener('click', () => submissionModal.classList.remove('active'));
+                submissionModal.addEventListener('click', e => e.target === submissionModal && submissionModal.classList.remove('active'));
             }
+
+            // Game Progress Share Functionality
+            const gameShareIcons = document.querySelectorAll('.game-share-icon');
+            const nicknameModal = document.getElementById('nicknameModal');
+            const shareNicknameInput = document.getElementById('shareNicknameInput');
+            const shareMessagePreview = document.getElementById('shareMessagePreview');
+            const confirmShareButton = document.getElementById('confirmShareButton');
+            const skipShareButton = document.getElementById('skipShareButton');
+            const cancelShareButton = document.getElementById('cancelShareButton');
+            const clipboardToast = document.getElementById('clipboardToast');
+            let currentShareService = null;
+
+            function updateSharePreview(nickname) {
+                const userIdentifier = nickname || "I";
+                shareMessagePreview.textContent = `${userIdentifier} reached level ${level} on Nutriwai! Learning to eat healthy every day. #Nutriwai #HealthyEating`;
+            }
+
+            gameShareIcons.forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    currentShareService = this.dataset.service;
+                    shareNicknameInput.value = ''; // Reset nickname input
+                    updateSharePreview(''); // Update with no nickname initially
+                    nicknameModal.classList.add('active');
+                });
+            });
+
+            if(shareNicknameInput) {
+                shareNicknameInput.addEventListener('input', function() {
+                    updateSharePreview(this.value);
+                });
+            }
+            
+            function proceedWithShare(service, nickname) {
+                const userIdentifier = nickname || "I";
+                const message = `${userIdentifier} reached level ${level} on Nutriwai! Learning to eat healthy every day. #Nutriwai #HealthyEating`;
+                const encodedMessage = encodeURIComponent(message);
+                const pageUrl = encodeURIComponent(window.location.href);
+                let shareUrl = '';
+
+                switch(service) {
+                    case 'facebook':
+                        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}&quote=${encodedMessage}`;
+                        break;
+                    case 'linkedin':
+                        shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${pageUrl}&title=${encodeURIComponent('My Nutriwai Progress!')}&summary=${encodedMessage}`;
+                        break;
+                    case 'whatsapp':
+                        shareUrl = `https://api.whatsapp.com/send?text=${encodedMessage}%20${pageUrl}`;
+                        break;
+                    case 'instagram':
+                        navigator.clipboard.writeText(message).then(() => {
+                            clipboardToast.textContent = "Message copied! Share on your Instagram.";
+                            clipboardToast.classList.add('show');
+                            setTimeout(() => clipboardToast.classList.remove('show'), 3000);
+                        }).catch(err => {
+                            console.error('Failed to copy text: ', err);
+                            clipboardToast.textContent = "Could not copy message.";
+                            clipboardToast.classList.add('show');
+                            setTimeout(() => clipboardToast.classList.remove('show'), 3000);
+                        });
+                        shareUrl = 'https://www.instagram.com/nutriwai/'; // Link to profile
+                        break;
+                }
+                if (shareUrl) {
+                    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                }
+                nicknameModal.classList.remove('active');
+            }
+
+            if(confirmShareButton) confirmShareButton.addEventListener('click', () => proceedWithShare(currentShareService, shareNicknameInput.value.trim()));
+            if(skipShareButton) skipShareButton.addEventListener('click', () => proceedWithShare(currentShareService, ''));
+            if(cancelShareButton) cancelShareButton.addEventListener('click', () => nicknameModal.classList.remove('active'));
+            if(nicknameModal) nicknameModal.addEventListener('click', e => e.target === nicknameModal && nicknameModal.classList.remove('active'));
+
         });
         
         function updateCooldowns() {
@@ -805,47 +946,34 @@
             for (let i = 0; i < cooldowns.length; i++) {
                 if (cooldowns[i] > 0) {
                     cooldowns[i]--;
-                    if (cards[i]) { // Check if card exists
-                        if (cooldowns[i] === 0) {
-                            cards[i].style.opacity = '1';
-                            cards[i].style.pointerEvents = 'auto';
-                        } else {
-                            cards[i].style.opacity = '0.7';
-                            cards[i].style.pointerEvents = 'none';
-                        }
+                    if (cards[i]) { 
+                        cards[i].style.opacity = cooldowns[i] === 0 ? '1' : '0.7';
+                        cards[i].style.pointerEvents = cooldowns[i] === 0 ? 'auto' : 'none';
                     }
                 }
             }
         }
         
         function addPoint(element, index) {
-            if (!element || element.dataset.processing === 'true' || (cooldowns[index] !== undefined && cooldowns[index] > 0)) {
-                 return;
-            }
+            if (!element || element.dataset.processing === 'true' || (cooldowns[index] !== undefined && cooldowns[index] > 0)) return;
             
             element.dataset.processing = 'true';
             element.classList.add('clicked');
             
             let pointsToAdd = 1;
-            
-            if (lastClickedIndex !== index && lastClickedIndex !== -1) { // Check lastClickedIndex is not initial -1
+            if (lastClickedIndex !== index && lastClickedIndex !== -1) { 
                 streak++;
                 if (streak >= 3) {
                     pointsToAdd = Math.min(5, Math.floor(streak / 3) + 1);
-                    const streakEffect = document.getElementById('streakEffect');
-                    if (streakEffect) {
-                        streakEffect.innerText = `${streak}x STREAK! +${pointsToAdd}`;
-                        streakEffect.style.animation = 'none';
-                        void streakEffect.offsetWidth; // Trigger reflow
-                        streakEffect.style.animation = 'streakAnimation 1.5s forwards';
+                    const streakEl = document.getElementById('streakEffect');
+                    if (streakEl) {
+                        streakEl.innerText = `${streak}x STREAK! +${pointsToAdd}`;
+                        streakEl.style.animation = 'none'; void streakEl.offsetWidth; 
+                        streakEl.style.animation = 'streakAnimation 1.5s forwards';
                     }
                 }
-            } else if (lastClickedIndex === index) { // Reset streak if clicking the same card consecutively
-                 streak = 0; // Reset streak
-            } else { // First click or different card after a reset
-                streak = 1; // Start streak
-            }
-            
+            } else if (lastClickedIndex === index) { streak = 0; } 
+            else { streak = 1; }
             lastClickedIndex = index;
             
             const pointsPopup = element.querySelector('.points-popup');
@@ -854,113 +982,65 @@
             score += pointsToAdd;
             cooldowns[index] = Math.max(1, 5 - Math.floor(level / 3));
             
-            updateProgressBar();
-            checkLevelUp();
-            saveProgress(); // Save progress after score/level changes
+            updateProgressBar(); checkLevelUp(); saveProgress(); 
 
             setTimeout(() => {
                 element.classList.remove('clicked');
                 element.dataset.processing = 'false';
             }, 1000);
             
-            const icon = element.querySelector('.icon img'); // Target the image inside the icon div
+            const icon = element.querySelector('.icon img'); 
             if (icon) {
-                icon.style.animation = 'none'; // Reset animation before applying new one
-                void icon.offsetWidth; // Trigger reflow
-
-                switch(index) {
-                    case 0: icon.style.animation = 'pulse 0.7s 2'; break;
-                    case 1: icon.style.animation = 'shake 0.5s 1'; break;
-                    case 2: icon.style.animation = 'rotate 1s 1'; break;
-                }
-                 // Remove animation after it finishes to prevent it from re-triggering on hover
-                setTimeout(() => {
-                    if(icon) icon.style.animation = '';
-                }, (index === 0 ? 1400 : (index === 1 ? 500 : 1000)));
+                icon.style.animation = 'none'; void icon.offsetWidth; 
+                const animations = ['pulse 0.7s 2', 'shake 0.5s 1', 'rotate 1s 1'];
+                icon.style.animation = animations[index % animations.length];
+                setTimeout(() => { if(icon) icon.style.animation = ''; }, (index === 0 ? 1400 : (index === 1 ? 500 : 1000)));
             }
         }
         
         function updateProgressBar() {
             const progressFill = document.getElementById('progressFill');
             const progressText = document.getElementById('progressText');
-            
             if (!progressFill || !progressText) return;
-
-            const progressTowardsNextLevel = score - ((level -1) * levelThreshold); // Score accumulated in current level
+            const progressTowardsNextLevel = score - ((level -1) * levelThreshold); 
             const percentage = levelThreshold > 0 ? (Math.max(0, progressTowardsNextLevel) / levelThreshold) * 100 : 0;
-            
-            progressFill.style.width = Math.min(100, percentage) + '%'; // Cap at 100%
+            progressFill.style.width = Math.min(100, percentage) + '%'; 
             progressText.innerText = `Score: ${score}`;
-            
-            if (percentage > 80) {
-                progressFill.style.backgroundColor = '#FFD700';
-            } else {
-                progressFill.style.backgroundColor = 'var(--primary)';
-            }
+            progressFill.style.backgroundColor = percentage > 80 ? '#FFD700' : 'var(--primary)';
         }
 
         function updateLevelBadge() {
             const levelBadge = document.getElementById('levelBadge');
-            if (levelBadge) {
-                 levelBadge.innerText = `Level ${level}`;
-            }
+            if (levelBadge) levelBadge.innerText = `Level ${level}`;
         }
         
         function checkLevelUp() {
-            // Check if current score meets or exceeds the threshold for the *current* level
-            // (level -1) * oldLevelThreshold + newLevelThreshold is a bit complex.
-            // Simpler: if score >= totalScoreNeededForNextLevel
             const scoreNeededForNextLevel = level * levelThreshold;
-
             if (score >= scoreNeededForNextLevel) {
-                level++;
-                updateLevelBadge(); // Update badge text first
-                
-                const levelBadge = document.getElementById('levelBadge');
-                if (levelBadge) {
-                    levelBadge.style.transform = 'scale(1.5)';
-                    levelBadge.style.backgroundColor = '#FFD700';
-                    setTimeout(() => {
-                        levelBadge.style.transform = 'scale(1)';
-                        levelBadge.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-                    }, 1000);
+                level++; updateLevelBadge(); 
+                const badgeEl = document.getElementById('levelBadge');
+                if (badgeEl) {
+                    badgeEl.style.transform = 'scale(1.5)'; badgeEl.style.backgroundColor = '#FFD700';
+                    setTimeout(() => { badgeEl.style.transform = 'scale(1)'; badgeEl.style.backgroundColor = 'rgba(255,255,255,0.9)'; }, 1000);
                 }
-                
-                const visualColumn = document.querySelector('.visual-column');
-                if (visualColumn) {
-                    const flashEffect = document.createElement('div');
-                    flashEffect.style.cssText = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 215, 0, 0.3); z-index: 5; pointer-events: none;';
-                    visualColumn.appendChild(flashEffect);
-                    setTimeout(() => { visualColumn.removeChild(flashEffect); }, 500); // Shorter flash
+                const visualCol = document.querySelector('.visual-column');
+                if (visualCol) {
+                    const flash = document.createElement('div');
+                    flash.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(255,215,0,0.3);z-index:5;pointer-events:none;';
+                    visualCol.appendChild(flash);
+                    setTimeout(() => visualCol.removeChild(flash), 500); 
                 }
-                
-                // Increase difficulty: make next level require more points
-                levelThreshold = Math.floor(10 + (level * 5)); // Update threshold for the *new* current level
-                saveProgress(); // Save progress after level up and threshold change
-                updateProgressBar(); // Reflect new threshold if progress bar shows progress within current level
+                levelThreshold = Math.floor(10 + (level * 5)); 
+                saveProgress(); updateProgressBar(); 
             }
         }
     </script>
     
     <style>
-        /* Animations for food images */
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(5px) rotate(3deg); }
-            50% { transform: translateX(-5px) rotate(-3deg); }
-            75% { transform: translateX(3px) rotate(2deg); }
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
-            to { transform: rotate(360deg) scale(1); }
-        }
+        /* Animations for food images (already defined, kept for completeness) */
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(5px) rotate(3deg)} 50%{transform:translateX(-5px) rotate(-3deg)} 75%{transform:translateX(3px) rotate(2deg)} }
+        @keyframes rotate { from{transform:rotate(0deg) scale(1)} 50%{transform:rotate(180deg) scale(1.1)} to{transform:rotate(360deg) scale(1)} }
     </style>
     </body>
 </html>
